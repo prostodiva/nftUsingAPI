@@ -1,0 +1,777 @@
+Script started on Wed Mar  5 19:32:58 2025
+[1m[7m%[27m[1m[0m                                                                                                                                                                       [0m[27m[24m[Jevolvers@Ritas-MacBook-Pro nftMarketplace % [K[?2004hddate[?2004l
+Wed Mar  5 19:33:03 PST 2025
+[1m[7m%[27m[1m[0m                                                                                                                                                                       [0m[27m[24m[Jevolvers@Ritas-MacBook-Pro nftMarketplace % [K[?2004hlls -l[?2004l
+total 6912
+-rw-r--r--@  1 evolvers  staff      884 Feb  1 11:35 Makefile
+drwxr-xr-x@ 20 evolvers  staff      640 Mar  5 19:30 build
+drwxr-xr-x@  3 evolvers  staff       96 Jan 24 09:59 doc
+drwxr-xr-x@  8 evolvers  staff      256 Mar  5 19:11 inlude
+drwxr-xr-x@ 21 evolvers  staff      672 Mar  5 19:21 keypairs
+drwxr-xr-x@  3 evolvers  staff       96 Feb  1 11:18 lib
+-rwxr-xr-x@  1 evolvers  staff  3523240 Mar  5 19:30 main
+-rw-r--r--@  1 evolvers  staff      235 Jan  8 10:47 nft-keypair.json
+-rw-r--r--@  1 evolvers  staff       43 Mar  5 19:32 project.scr
+drwxr-xr-x@ 11 evolvers  staff      352 Mar  5 19:30 src
+[1m[7m%[27m[1m[0m                                                                                                                                                                       [0m[27m[24m[Jevolvers@Ritas-MacBook-Pro nftMarketplace % [K[?2004hls -ldate git clone https://github.com/prostodiva/portfolioProject.git[60Dls                                                          [58Dcd ..git add .[9Dls       clear   c  mmake clean;make all;[?2004l
+rm -rf build  main
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/account.cpp -o build/account.o
+In file included from src/account.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/account.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m[1msrc/account.cpp:335:87: [0m[0;1;35mwarning: [0m[1munused parameter 'collections' [-Wunused-parameter][0m
+void UserAccount::addNFTToCollection(std::vector<NFT>& nfts, std::vector<Collection>& collections) {
+[0;1;32m                                                                                      ^
+[0m3 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/api.cpp -o build/api.o
+In file included from src/api.cpp:2:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/api.cpp:2:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/collection.cpp -o build/collection.o
+In file included from src/collection.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/collection.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/main.cpp -o build/main.o
+In file included from src/main.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/main.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/marketplace.cpp -o build/marketplace.o
+In file included from src/marketplace.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/marketplace.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/menu.cpp -o build/menu.o
+In file included from src/menu.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/menu.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/nft.cpp -o build/nft.o
+In file included from src/nft.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/nft.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/solana_wallet.cpp -o build/solana_wallet.o
+In file included from src/solana_wallet.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/solana_wallet.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m[1msrc/solana_wallet.cpp:86:13: [0m[0;1;35mwarning: [0m[1munused variable 'status' [-Wunused-variable][0m
+        int status = pclose(pipe);
+[0;1;32m            ^
+[0mIn file included from src/solana_wallet.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:15:10: [0m[0;1;35mwarning: [0m[1mprivate field 'debug' is not used [-Wunused-private-field][0m
+    bool debug = true;
+[0;1;32m         ^
+[0m4 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MMD -MP -c src/transaction.cpp -o build/transaction.o
+In file included from src/transaction.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:16:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_wallet.hpp:27:5: [0m[0;1;35mwarning: [0m[1mfield 'balance' will be initialized after field 'isConnected' [-Wreorder-ctor][0m
+    balance(0.0), 
+[0;1;32m    ^~~~~~~~~~~~
+[0m[0;32m    isConnected(false)
+[0mIn file included from src/transaction.cpp:1:
+In file included from /Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/header.hpp:17:
+[1m/Users/evolvers/dev/project25/portfolioProject/nftMarketplace/inlude/solana_integration.hpp:46:51: [0m[0;1;35mwarning: [0m[1munused parameter 'metadata' [-Wunused-parameter][0m
+    static std::string mintNFT(const std::string& metadata) {
+[0;1;32m                                                  ^
+[0m2 warnings generated.
+clang++ -g -Wall -Wextra -std=c++14 -I/opt/homebrew/include -I/opt/homebrew/include/crow -I/opt/homebrew/opt/asio/include -I/opt/homebrew/opt/boost/include -I/usr/local/include -pthread -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk build/account.o build/api.o build/collection.o build/main.o build/marketplace.o build/menu.o build/nft.o build/solana_wallet.o build/transaction.o -o main -pthread -L/opt/homebrew/lib -largon2
+[1m[7m%[27m[1m[0m                                                                                                                                                                       [0m[27m[24m[Jevolvers@Ritas-MacBook-Pro nftMarketplace % [K[?2004h../main[1m [0m[0m [?2004l
+Starting API server on port 3000...
+Server starting on port 3001...
+(2025-03-06 03:33:36) [INFO    ] Crow/master server is running at http://0.0.0.0:3001 using 2 threads
+(2025-03-06 03:33:36) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
+Welcome to the NFT store!
+
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+(2025-03-06 03:33:54) [INFO    ] Request: 127.0.0.1:60414 0x12c813c18 HTTP/1.1 POST /api/account/create
+Generating a new keypair
+Wrote new keypair to keypairs/rita/id.json
+===============================================================================
+pubkey: 2UNeDR94wTYVifJRrFKSMQ2KGM3GpzEAiFp1UQ9yyXc6
+===============================================================================
+Save this seed phrase to recover your new keypair:
+empower witness category purity island pupil into book stone flame fossil until
+===============================================================================
+(2025-03-06 03:33:54) [INFO    ] Response: 0x12c813c18 /api/account/create 200 0
+(2025-03-06 03:34:00) [INFO    ] Request: 127.0.0.1:60420 0x12d809218 HTTP/1.1 GET /api/account/rita
+(2025-03-06 03:34:00) [INFO    ] Response: 0x12d809218 /api/account/rita 200 0
+(2025-03-06 03:34:06) [INFO    ] Request: 127.0.0.1:60420 0x12d809218 HTTP/1.1 GET /api/accounts
+(2025-03-06 03:34:06) [INFO    ] Response: 0x12d809218 /api/accounts 200 0
+(2025-03-06 03:34:16) [INFO    ] Request: 127.0.0.1:60433 0x12e808218 HTTP/1.1 DELETE /api/account/rita
+(2025-03-06 03:34:16) [INFO    ] Response: 0x12e808218 /api/account/rita 200 0
+(2025-03-06 03:34:19) [INFO    ] Request: 127.0.0.1:60433 0x12e808218 HTTP/1.1 PUT /api/account/alex
+(2025-03-06 03:34:19) [INFO    ] Response: 0x12e808218 /api/account/alex 404 0
+(2025-03-06 03:34:27) [INFO    ] Request: 127.0.0.1:60444 0x12e80a818 HTTP/1.1 PUT /api/account/r
+(2025-03-06 03:34:27) [INFO    ] Response: 0x12e80a818 /api/account/r 404 0
+(2025-03-06 03:34:37) [INFO    ] Request: 127.0.0.1:60451 0x12e808218 HTTP/1.1 PUT /api/account/rita
+(2025-03-06 03:34:37) [INFO    ] Response: 0x12e808218 /api/account/rita 404 0
+(2025-03-06 03:34:53) [INFO    ] Request: 127.0.0.1:60469 0x12e80a818 HTTP/1.1 PUT /api/account/rita1
+(2025-03-06 03:34:53) [INFO    ] Response: 0x12e80a818 /api/account/rita1 404 0
+1 2
+Enter email: rita
+Enter password: 123
+Login Error: Invalid email
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+1
+/opt/homebrew/bin/solana
+solana-cli 1.18.20 (src:00000000; feat:4215500110, client:SolanaLabs)
+Enter name: rita
+Enter email: rita@gmail.com
+Enter password: 123
+Generating a new keypair
+Wrote new keypair to keypairs/rita_rita_gmail_com/id.json
+=======================================================================
+pubkey: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+=======================================================================
+Save this seed phrase to recover your new keypair:
+pave someone burden state must aim economy foster need mouse bleak face
+=======================================================================
+[1mConfig File:[0m /Users/evolvers/.config/solana/cli/config.yml
+[1mRPC URL:[0m https://api.testnet.solana.com [3m[0m
+[1mWebSocket URL:[0m wss://api.testnet.solana.com/ [3m(computed)[0m
+[1mKeypair Path:[0m keypairs/rita_rita_gmail_com/id.json [3m[0m
+[1mCommitment:[0m confirmed [3m[0m
+Account created successfully!
+Wallet Address: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+4
+Login first
+
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+2
+Enter email: rita@gmail.com
+Enter password: 123
+Login successful! Welcome, rita
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+4
+Wallet Address: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+Name: rita
+Email: rita@gmail.com
+Wallet Balance: 0
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+5
+Address: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+Balance: 0
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+6
+No transaction found
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+15 4
+Wallet connected successfully!
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+15
+Current balance: 0 SOL
+Requesting airdrop of 0.05 SOL to D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+Airdrop successful! 0.05 SOL added to your wallet
+New balance: 0.05 SOL
+Remaining airdrops today: 1
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+16
+SOL Balance: 0.05
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+5
+Address: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+Balance: 0
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+7
+Enter collection name: 
+col1
+NFT collection created successfully!
+Collection Name: col1
+Creator rita
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+11
+
+No NFTs currently listed on the marketplace.
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+8
+col1
+
+Enter collection name to add NFT: col1
+Enter NFT name: nft1
+Enter NFT price: 0.2
+Error: Refusing to overwrite nft-keypair.json without --force flag
+NFT minted on Solana devnet
+
+NFT added successfully!
+Token ID: NFT-3466D4
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+9
+col1
+
+Enter collection name to view: col1
+
+Collection: col1
+Creator: rita
+
+NFTs in collection:
+Token ID: NFT-3466D4
+Name: nft1
+Owner: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+Price: 0.2 ETH
+Status: Not listed
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+10
+
+Your NFTs:
+Checking collection: col1
+Token ID: NFT-3466D4
+Name: nft1
+Owner: D3cnJvM5raGkqV84q4C7yy48eHxhqEZfz7e7iEje48Mh
+Price: 0.2 ETH
+Status: Not listed
+Enter NFT token ID to list: NFT-3466D4
+Enter price (ETH): 0.1
+Creating Solana listing...
+[1;31merror:[0m Found argument '[33mcall[0m' which wasn't expected, or isn't valid in this context
+
+USAGE:
+    solana program [FLAGS] [OPTIONS] <SUBCOMMAND>
+
+For more information try [32m--help[0m
+Error listing: Failed to list NFT on Solana
+NFT listed successfully!
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+11
+
+No NFTs currently listed on the marketplace.
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+16
+SOL Balance: 0.05
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+6
+No transaction found
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+12
+Enter NFT token ID to buy: NFT-3466D4
+Error buying NFT: NFT not found
+Error: NFT not found
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+3 1
+/opt/homebrew/bin/solana
+solana-cli 1.18.20 (src:00000000; feat:4215500110, client:SolanaLabs)
+Enter name: alex
+Enter email: alex@yahoo
+Enter password: 345
+Generating a new keypair
+Wrote new keypair to keypairs/alex_alex_yahoo/id.json
+=========================================================================
+pubkey: 89cG2xduoM1LdEpE9844Sa7RK3sQBDuFpUCZkz7bXmsB
+=========================================================================
+Save this seed phrase to recover your new keypair:
+ridge stuff carry dilemma chair drill pluck endless half swift sugar play
+=========================================================================
+[1mConfig File:[0m /Users/evolvers/.config/solana/cli/config.yml
+[1mRPC URL:[0m https://api.testnet.solana.com [3m[0m
+[1mWebSocket URL:[0m wss://api.testnet.solana.com/ [3m(computed)[0m
+[1mKeypair Path:[0m keypairs/alex_alex_yahoo/id.json [3m[0m
+[1mCommitment:[0m confirmed [3m[0m
+Account created successfully!
+Wallet Address: 89cG2xduoM1LdEpE9844Sa7RK3sQBDuFpUCZkz7bXmsB
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+2
+Login Error: A user is already logged in
+
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+3
+ Logged out successfully
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+2
+Enter email: alex@yahoo
+Enter password: 345
+Login successful! Welcome, alex
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+11
+
+No NFTs currently listed on the marketplace.
+1 - create a new account
+2 - login to an existing account
+3 - logout
+4 - view profile
+5 - check wallet balance
+6 - view transaction history
+7 - create a new NFT collection
+8 - create and add NFTs to the collection
+9 - view the NFTs in the collection
+10 - list NFT for sale
+11 - View marketplace listings
+12 - buy NFT
+13 - exit
+14 - connect Phanton Wallet
+15 - Request test sol
+16 - check sol balance
+
+13
+Exiting the program...
+[1m[7m%[27m[1m[0m                                                                                                                                                                       [0m[27m[24m[Jevolvers@Ritas-MacBook-Pro nftMarketplace % [K[?2004heexit[?2004l
+
+Script done on Wed Mar  5 19:39:07 2025
