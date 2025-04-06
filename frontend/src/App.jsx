@@ -1,18 +1,23 @@
 import React from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import './App.css';
+import {Route, BrowserRouter as Router, Routes, Navigate} from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 
-function App() {
+const AppRoutes =() => {
+    console.log('App rendering');
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-100">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<LandingPage />} />
+    </Routes>
   );
+};
+
+const App = () => {
+    return (
+        <>
+            <AppRoutes />
+        </>
+    )
 }
 
 export default App; 

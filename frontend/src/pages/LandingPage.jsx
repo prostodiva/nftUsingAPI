@@ -1,11 +1,14 @@
 import React from 'react';
+import Home from '../components/home.jsx'
+import Header from "../components/header.jsx";
 
 const LandingPage = () => {
     return (
         <div className="min-h-screen flex flex-col">
+            <Header />
             <main className="flex-grow">
                 <div>
-                    <h1>NFT Marketplace test landing page</h1>
+                    <Home />
                 </div>
             </main>
         </div>
