@@ -16,6 +16,7 @@
 #include "solana_wallet.hpp"
 #include "solana_integration.hpp"
 #include <argon2.h>
+#include <crow.h>
 
 #include <iostream>
 #include <string>
@@ -32,6 +33,8 @@
 #include <fstream>
 #include <filesystem>
 
+// API Server function declaration
+void startApiServer();
 
 class NFT;
 class Collection;

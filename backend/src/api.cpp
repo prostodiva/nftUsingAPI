@@ -4,7 +4,7 @@
 
 void startApiServer() {
     crow::SimpleApp app;
-    const std::vector<int> ports = {3001, 3002, 3003};
+    const std::vector<int> ports = {3000};
 
     for (int port : ports) {
         try {
@@ -86,7 +86,39 @@ void startApiServer() {
                 } catch(const std::exception& e) {
                     return crow::response(400, e.what());
                 }
-            });	
+            });
+
+            CROW_ROUTE(app, "/api/collections").methods("GET"_method)
+                ([]() {
+                    try {
+                        std::vector<std::string> collections;
+                        std::string cmd = "ls -1 keypairs/";
+
+                        // Execute ls command and capture output
+                        FILE* pipe = popen(cmd.c_str(), "r");
+                        if (!pipe) {
+                            return crow::response(500, "Failed to list collections");
+                        }
+
+                        char buffer[128];
+                        while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+                            std::string dir(buffer);
+                            if (!dir.empty() && dir[dir.length()-1] == '\n') {
+                                dir.erase(dir.length()-1);
+                            }
+                            collections.push_back(dir);
+                        }
+                        pclose(pipe);
+
+                        // Create response
+                        crow::json::wvalue response;
+                        response["status"] = "success";
+                        response["collections"] = collections;
+                        return crow::response(response);
+                    } catch(const std::exception& e) {
+                        return crow::response(400, e.what());
+                    }
+                });
 
 	// Add DELETE endpoint
             CROW_ROUTE(app, "/api/account/<string>").methods("DELETE"_method)

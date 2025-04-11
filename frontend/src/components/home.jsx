@@ -1,4 +1,5 @@
 import '../styles/home.css';
+import Collections from "./collections.jsx"
 
 const Home = () => {
     try {
@@ -8,6 +9,9 @@ const Home = () => {
                 <div className="hero-content">
                     <h1>Welcome to NFT Marketplace</h1>
                     <p>Discover, collect, and trade unique digital assets</p>
+                </div>
+                <div>
+                    <Collections />
                 </div>
             </section>
         );

@@ -58,6 +58,6 @@ ENV LD_LIBRARY_PATH=/usr/lib/gcc/aarch64-linux-gnu/12:/usr/lib/aarch64-linux-gnu
 # Build with verbose output and C++17
 RUN make CXXFLAGS="-g -Wall -Wextra -std=c++17 -I/usr/include -I/usr/local/include -I/app/include -I/usr/include/argon2 -I/usr/local/include/crow -pthread" LDFLAGS="-largon2" VERBOSE=1
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["./main"]

@@ -5,8 +5,12 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with specific versions
+RUN npm cache clean --force && \
+    npm install vite@5.1.4 && \
+    npm install @vitejs/plugin-react@4.2.1 && \
+    npm install esbuild@0.21.5 && \
+    npm install
 
 # Copy the rest of the application
 COPY . .
