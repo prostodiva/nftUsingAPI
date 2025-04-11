@@ -143,17 +143,17 @@ void UserAccount::createAccount(std::vector<UserAccount>& users) {
         std::string keypair_path = keypair_dir + "/id.json";
 
         // Generate new keypair
-    	std::string keygen_cmd = SOLANA_PATH + "solana-keygen new --no-bip39-passphrase --force -o " + keypair_path;
-		if (system(keygen_cmd.c_str()) != 0) {
+        std::string keygen_cmd = "solana-keygen new --no-bip39-passphrase --force -o " + keypair_path;
+        if (system(keygen_cmd.c_str()) != 0) {
             throw std::runtime_error("Failed to generate keypair");
         }
 
         // Set Solana configuration
-        std::string config_cmd = SOLANA_PATH + "solana config set --url https://api.testnet.solana.com --keypair " + keypair_path;
+        std::string config_cmd = "solana config set --url https://api.testnet.solana.com --keypair " + keypair_path;
         system(config_cmd.c_str());
 
-	// Get the actual wallet address from the keypair
-        std::string address_cmd = SOLANA_PATH + "solana address -k " + keypair_path;
+        // Get the actual wallet address from the keypair
+        std::string address_cmd = "solana address -k " + keypair_path;
         FILE* pipe = popen(address_cmd.c_str(), "r");
 		if (pipe) {
             char buffer[128];

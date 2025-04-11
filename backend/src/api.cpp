@@ -16,8 +16,8 @@ void startApiServer() {
                     std::string name = x["name"].s();
                     std::string keypair_path = "keypairs/" + name + "/id.json";
                     
-                    // Use solana-keygen with macOS path
-                    std::string keygen_cmd = "/Users/" + std::string(getenv("USER")) + "/.local/share/solana/install/active_release/bin/solana-keygen new --no-bip39-passphrase --force -o " + keypair_path;
+                    // Use solana-keygen directly since it's in PATH
+                    std::string keygen_cmd = "solana-keygen new --no-bip39-passphrase --force -o " + keypair_path;
                     
                     if (system(keygen_cmd.c_str()) != 0) {
                         return crow::response(500, "Failed to generate keypair");

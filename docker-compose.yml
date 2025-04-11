@@ -7,12 +7,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=development
     volumes:
-      - ./backend:/app/backend
-      - /app/backend/build
+      - ./backend:/app
     networks:
       - app-network
-    restart: unless-stopped
 
   frontend:
     build:
@@ -20,14 +20,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5173:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000
     depends_on:
       - backend
     networks:
       - app-network
-    restart: unless-stopped
 
 networks:
   app-network:

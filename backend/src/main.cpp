@@ -5,13 +5,26 @@
 
 int main() {
     try {
+        std::vector<UserAccount>users;
+        std::vector<NFT> nfts;
+        std::vector<Collection> collections;
+
         std::cout << "Starting NFT Marketplace API server..." << std::endl;
 
         // Initialize the marketplace
         Marketplace* marketplace = Marketplace::getInstance();
 
         // Start the API server
-        startApiServer();
+        std::cout << "Starting API server on port 3000..." << std::endl;
+        std::thread api_thread([]() {
+            startApiServer();
+        });
+        api_thread.detach(); // Let it run independently
+
+        // Give the server a moment to start
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        menu(users, nfts, collections);
 
         delete marketplace;
         return 0;
@@ -20,3 +33,5 @@ int main() {
         return 1;
     }
 }
+
+

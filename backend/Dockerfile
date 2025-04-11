@@ -1,63 +1,60 @@
 FROM debian:bookworm-slim
 
-# Install essential dependencies
+# Install required packages
 RUN apt-get update && apt-get install -y \
-    clang \
-    make \
+    build-essential \
     cmake \
     git \
-    libargon2-dev \
-    libasio-dev \
-    libssl-dev \
-    zlib1g-dev \
+    curl \
+    wget \
     pkg-config \
-    libc6-dev \
-    linux-libc-dev \
-    libboost-system-dev \
-    libboost-filesystem-dev \
-    libboost-thread-dev \
-    libboost-program-options-dev \
-    gcc-12 \
-    g++-12 \
-    libc++-dev \
-    libc++abi-dev \
-    libstdc++-12-dev \
+    libssl-dev \
+    libudev-dev \
+    libclang-dev \
+    libpq-dev \
+    python3 \
+    python3-pip \
+    libasio-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set gcc-12 as the default compiler
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100 \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
+# Set default compiler
+ENV CC=gcc
+ENV CXX=g++
 
-# Install Crow with explicit ASIO include path
-RUN git clone https://github.com/CrowCpp/Crow.git \
-    && cd Crow \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-        -DCROW_BUILD_EXAMPLES=OFF \
-        -DCROW_BUILD_TESTS=OFF \
-        -DASIO_INCLUDE_DIR=/usr/include \
-    && make install \
-    && cd / \
-    && rm -rf Crow
+# Install Rust and Cargo
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
+# Install Solana CLI tools using Cargo
+RUN cargo install solana-cli --version 1.16.15
+
+# Configure Solana to use testnet
+RUN solana config set --url https://api.testnet.solana.com
+
+# Configure git for non-interactive use
+RUN git config --global url."https://".insteadOf git:// && \
+    git config --global http.sslVerify false
+
+# Clone and build Crow library
+RUN git clone https://github.com/CrowCpp/Crow.git /tmp/crow && \
+    cd /tmp/crow && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF && \
+    make install && \
+    rm -rf /tmp/crow
+
+# Set working directory
 WORKDIR /app
 
-# Copy backend files
+# Copy source files
 COPY . .
 
-# Create build directory
-RUN mkdir -p build
+# Build the application
+RUN cargo build --release
 
-# Set environment variables for the build
-ENV CPLUS_INCLUDE_PATH=/usr/include/c++/12:/usr/include/aarch64-linux-gnu/c++/12:/usr/include/c++/12/aarch64-linux-gnu:/usr/local/include:/usr/include/aarch64-linux-gnu:/usr/include:/app/include:${CPLUS_INCLUDE_PATH}
-ENV C_INCLUDE_PATH=/usr/lib/gcc/aarch64-linux-gnu/12/include:/usr/local/include:/usr/include/aarch64-linux-gnu:/usr/include:${C_INCLUDE_PATH}
-ENV PKG_CONFIG_PATH=/usr/lib/pkgconfig:${PKG_CONFIG_PATH}
-ENV LD_LIBRARY_PATH=/usr/lib/gcc/aarch64-linux-gnu/12:/usr/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH}
-
-# Build with verbose output and C++17
-RUN make CXXFLAGS="-g -Wall -Wextra -std=c++17 -I/usr/include -I/usr/local/include -I/app/include -I/usr/include/argon2 -I/usr/local/include/crow -pthread" LDFLAGS="-largon2" VERBOSE=1
-
+# Expose port
 EXPOSE 3000
 
-CMD ["./main"]
+# Run the application
+CMD ["./target/release/main"]
