@@ -1,0 +1,30 @@
+NFT Marketplace API
+Copyright (c) 2024 Margarita Kattsyna
+
+This project includes third-party software components:
+
+## Apache License 2.0 Components:
+- Solana CLI Tools (Copyright (c) 2021 Solana Foundation)
+- Metaplex (Copyright (c) 2021 Metaplex Studios)
+- Argon2 (Copyright (c) 2015 Daniel Dinu, Dmitry Khovratovich)
+- TypeScript (Copyright (c) Microsoft Corporation)
+
+## MIT License Components:
+- Crow (Copyright (c) 2014-2021 CrowCpp)
+- React (Copyright (c) Meta Platforms, Inc.)
+- React DOM (Copyright (c) Meta Platforms, Inc.)
+- Vite (Copyright (c) 2019-present, Yuxi (Evan) You)
+- Tailwind CSS (Copyright (c) 2020 Adam Wathan)
+- Radix UI (Copyright (c) 2020 WorkOS)
+- Axios (Copyright (c) 2014-present Matt Zabriskie)
+- Lucide React (Copyright (c) 2020 Lucide Contributors)
+- React Router DOM (Copyright (c) React Training)
+- ESLint (Copyright (c) OpenJS Foundation)
+- PostCSS (Copyright (c) 2013 Andrey Sitnik)
+- Autoprefixer (Copyright (c) 2013 Andrey Sitnik)
+
+## Boost Software License Components:
+- ASIO (Copyright (c) 2003-2023 Christopher M. Kohlhoff)
+
+All third-party components are used in accordance with their respective licenses.
+Full license texts are available in their respective repositories. 

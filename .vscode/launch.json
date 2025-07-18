@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug NFT Marketplace Backend",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/backend",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "build-debug",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Debug with Docker",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/app/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "/app",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "docker-build-debug",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+} 

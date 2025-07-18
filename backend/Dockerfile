@@ -15,17 +15,23 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     libasio-dev \
+    clang \
+    lldb \
+    libc++-dev \
+    libc++abi-dev \
+    g++ \
+    libstdc++-12-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set default compiler
-ENV CC=gcc
-ENV CXX=g++
+# Set default compiler for ARM64 (M2 Mac)
+ENV CC=clang
+ENV CXX=clang++
 
-# Install Rust and Cargo
+# Install Rust and Cargo (needed for Solana CLI)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# Install Solana CLI tools using Cargo
+# Install Solana CLI tools (requires Rust/Cargo as Solana CLI is written in Rust)
 RUN cargo install solana-cli --version 1.16.15
 
 # Configure Solana to use testnet
@@ -50,11 +56,11 @@ WORKDIR /app
 # Copy source files
 COPY . .
 
-# Build the application
-RUN cargo build --release
+# Build the application using clang++
+RUN make clean && make
 
 # Expose port
 EXPOSE 3000
 
 # Run the application
-CMD ["./target/release/main"]
+CMD ["./main"]

@@ -3,6 +3,10 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <cstdlib>
+#include <new>
+#include <cstring>
+#include <iostream>
 
 template<typename T>
 class V {

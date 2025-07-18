@@ -1,0 +1,55 @@
+MIT License
+
+Copyright (c) 2024 Margarita Kattsyna
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Dependencies and Licenses
+
+This project uses the following third-party libraries and tools:
+
+### Backend Dependencies (C++)
+- **Crow** - MIT License (https://github.com/CrowCpp/Crow)
+- **Argon2** - Apache License 2.0 (https://github.com/P-H-C/phc-winner-argon2)
+- **Solana CLI** - Apache License 2.0 (https://github.com/solana-labs/solana)
+- **ASIO** - Boost Software License (https://github.com/chriskohlhoff/asio)
+
+### Frontend Dependencies (JavaScript/React)
+- **React** - MIT License (https://github.com/facebook/react)
+- **React DOM** - MIT License (https://github.com/facebook/react)
+- **Vite** - MIT License (https://github.com/vitejs/vite)
+- **Tailwind CSS** - MIT License (https://github.com/tailwindlabs/tailwindcss)
+- **Radix UI** - MIT License (https://github.com/radix-ui/primitives)
+- **Axios** - MIT License (https://github.com/axios/axios)
+- **Lucide React** - MIT License (https://github.com/lucide-react/lucide)
+- **React Router DOM** - MIT License (https://github.com/remix-run/react-router)
+
+### Development Tools
+- **TypeScript** - Apache License 2.0 (https://github.com/microsoft/TypeScript)
+- **ESLint** - MIT License (https://github.com/eslint/eslint)
+- **PostCSS** - MIT License (https://github.com/postcss/postcss)
+- **Autoprefixer** - MIT License (https://github.com/postcss/autoprefixer)
+
+### Blockchain Integration
+- **Solana Web3.js** - Apache License 2.0 (https://github.com/solana-labs/solana-web3.js)
+- **Metaplex** - Apache License 2.0 (https://github.com/metaplex-foundation/metaplex)
+
+All third-party dependencies are used in accordance with their respective licenses. 

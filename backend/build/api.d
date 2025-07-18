@@ -1,12 +1,10 @@
-build/api.o: src/api.cpp /opt/homebrew/include/crow.h \
-  /opt/homebrew/include/crow/query_string.h \
-  /opt/homebrew/include/crow/http_parser_merged.h \
-  /opt/homebrew/include/crow/common.h \
-  /opt/homebrew/include/crow/utility.h \
-  /opt/homebrew/include/crow/settings.h \
-  /opt/homebrew/include/crow/ci_map.h \
-  /opt/homebrew/include/crow/TinySHA1.hpp \
-  /opt/homebrew/include/crow/socket_adaptors.h \
+build/api.o: src/api.cpp /usr/local/include/crow.h \
+  /usr/local/include/crow/query_string.h \
+  /usr/local/include/crow/http_parser_merged.h \
+  /usr/local/include/crow/common.h /usr/local/include/crow/utility.h \
+  /usr/local/include/crow/settings.h /usr/local/include/crow/ci_map.h \
+  /usr/local/include/crow/TinySHA1.hpp \
+  /usr/local/include/crow/socket_adaptors.h \
   /opt/homebrew/include/asio.hpp \
   /opt/homebrew/include/asio/any_completion_executor.hpp \
   /opt/homebrew/include/asio/detail/config.hpp \
@@ -421,45 +419,43 @@ build/api.o: src/api.cpp /opt/homebrew/include/crow.h \
   /opt/homebrew/include/asio/writable_pipe.hpp \
   /opt/homebrew/include/asio/write_at.hpp \
   /opt/homebrew/include/asio/impl/write_at.hpp \
-  /opt/homebrew/include/crow/json.h \
-  /opt/homebrew/include/crow/returnable.h \
-  /opt/homebrew/include/crow/logging.h \
-  /opt/homebrew/include/crow/mustache.h \
-  /opt/homebrew/include/crow/task_timer.h \
-  /opt/homebrew/include/crow/http_request.h \
-  /opt/homebrew/include/crow/websocket.h \
-  /opt/homebrew/include/crow/parser.h \
-  /opt/homebrew/include/crow/http_response.h \
-  /opt/homebrew/include/crow/mime_types.h \
-  /opt/homebrew/include/crow/multipart.h \
-  /opt/homebrew/include/crow/routing.h \
-  /opt/homebrew/include/crow/middleware.h \
-  /opt/homebrew/include/crow/middleware_context.h \
-  /opt/homebrew/include/crow/compression.h \
-  /opt/homebrew/include/crow/http_connection.h \
-  /opt/homebrew/include/crow/http_server.h \
-  /opt/homebrew/include/crow/version.h /opt/homebrew/include/crow/app.h \
+  /usr/local/include/crow/json.h /usr/local/include/crow/returnable.h \
+  /usr/local/include/crow/logging.h /usr/local/include/crow/mustache.h \
+  /usr/local/include/crow/task_timer.h \
+  /usr/local/include/crow/http_request.h \
+  /usr/local/include/crow/websocket.h /usr/local/include/crow/parser.h \
+  /usr/local/include/crow/http_response.h \
+  /usr/local/include/crow/mime_types.h \
+  /usr/local/include/crow/multipart.h \
+  /usr/local/include/crow/exceptions.h \
+  /usr/local/include/crow/multipart_view.h \
+  /usr/local/include/crow/routing.h /usr/local/include/crow/middleware.h \
+  /usr/local/include/crow/middleware_context.h \
+  /usr/local/include/crow/compression.h \
+  /usr/local/include/crow/http_connection.h \
+  /usr/local/include/crow/http_server.h \
+  /usr/local/include/crow/version.h /usr/local/include/crow/app.h \
   src/../include/header.hpp src/../include/V.hpp \
   src/../include/solana_config.hpp src/../include/solana_wallet.hpp \
   src/../include/solana_integration.hpp /opt/homebrew/include/argon2.h
 
-/opt/homebrew/include/crow.h:
+/usr/local/include/crow.h:
 
-/opt/homebrew/include/crow/query_string.h:
+/usr/local/include/crow/query_string.h:
 
-/opt/homebrew/include/crow/http_parser_merged.h:
+/usr/local/include/crow/http_parser_merged.h:
 
-/opt/homebrew/include/crow/common.h:
+/usr/local/include/crow/common.h:
 
-/opt/homebrew/include/crow/utility.h:
+/usr/local/include/crow/utility.h:
 
-/opt/homebrew/include/crow/settings.h:
+/usr/local/include/crow/settings.h:
 
-/opt/homebrew/include/crow/ci_map.h:
+/usr/local/include/crow/ci_map.h:
 
-/opt/homebrew/include/crow/TinySHA1.hpp:
+/usr/local/include/crow/TinySHA1.hpp:
 
-/opt/homebrew/include/crow/socket_adaptors.h:
+/usr/local/include/crow/socket_adaptors.h:
 
 /opt/homebrew/include/asio.hpp:
 
@@ -1289,43 +1285,47 @@ build/api.o: src/api.cpp /opt/homebrew/include/crow.h \
 
 /opt/homebrew/include/asio/impl/write_at.hpp:
 
-/opt/homebrew/include/crow/json.h:
+/usr/local/include/crow/json.h:
 
-/opt/homebrew/include/crow/returnable.h:
+/usr/local/include/crow/returnable.h:
 
-/opt/homebrew/include/crow/logging.h:
+/usr/local/include/crow/logging.h:
 
-/opt/homebrew/include/crow/mustache.h:
+/usr/local/include/crow/mustache.h:
 
-/opt/homebrew/include/crow/task_timer.h:
+/usr/local/include/crow/task_timer.h:
 
-/opt/homebrew/include/crow/http_request.h:
+/usr/local/include/crow/http_request.h:
 
-/opt/homebrew/include/crow/websocket.h:
+/usr/local/include/crow/websocket.h:
 
-/opt/homebrew/include/crow/parser.h:
+/usr/local/include/crow/parser.h:
 
-/opt/homebrew/include/crow/http_response.h:
+/usr/local/include/crow/http_response.h:
 
-/opt/homebrew/include/crow/mime_types.h:
+/usr/local/include/crow/mime_types.h:
 
-/opt/homebrew/include/crow/multipart.h:
+/usr/local/include/crow/multipart.h:
 
-/opt/homebrew/include/crow/routing.h:
+/usr/local/include/crow/exceptions.h:
 
-/opt/homebrew/include/crow/middleware.h:
+/usr/local/include/crow/multipart_view.h:
 
-/opt/homebrew/include/crow/middleware_context.h:
+/usr/local/include/crow/routing.h:
 
-/opt/homebrew/include/crow/compression.h:
+/usr/local/include/crow/middleware.h:
 
-/opt/homebrew/include/crow/http_connection.h:
+/usr/local/include/crow/middleware_context.h:
 
-/opt/homebrew/include/crow/http_server.h:
+/usr/local/include/crow/compression.h:
 
-/opt/homebrew/include/crow/version.h:
+/usr/local/include/crow/http_connection.h:
 
-/opt/homebrew/include/crow/app.h:
+/usr/local/include/crow/http_server.h:
+
+/usr/local/include/crow/version.h:
+
+/usr/local/include/crow/app.h:
 
 src/../include/header.hpp:
 

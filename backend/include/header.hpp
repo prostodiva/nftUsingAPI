@@ -1,11 +1,14 @@
 /*
  * Copyright (c) 2024 Margarita Kattsyna
  * NFT Marketplace using Solana technology
- * Licensed under Apache License 2.0
+ * Licensed under MIT License
  * 
  * This software includes components from:
- * - Solana (Copyright (c) 2021 Solana Foundation)
- * - Metaplex (Copyright (c) 2021 Metaplex Studios)
+ * - Solana (Copyright (c) 2021 Solana Foundation) - Apache License 2.0
+ * - Metaplex (Copyright (c) 2021 Metaplex Studios) - Apache License 2.0
+ * - Crow (MIT License)
+ * - Argon2 (Apache License 2.0)
+ * - ASIO (Boost Software License)
  */
 
 
