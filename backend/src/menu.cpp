@@ -33,7 +33,8 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                   << "14 - connect Phantom Wallet (disabled - not needed for CLI)\n"
                   << "15 - Request test sol\n"
                   << "16 - check sol balance\n"
-                  << "\nEnter your choice (1-16): ";
+                  << "17 - view all my collections\n"
+                  << "\nEnter your choice (1-17): ";
 
         // Ensure the prompt is displayed
         std::cout.flush();
@@ -44,8 +45,8 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             // Check if choice is valid
-            if (choice < 1 || choice > 16) {
-                std::cout << "Invalid choice. Please enter a number between 1 and 16." << std::endl;
+            if (choice < 1 || choice > 17) {
+                std::cout << "Invalid choice. Please enter a number between 1 and 17." << std::endl;
                 continue;
             }
 
@@ -189,6 +190,10 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                 }
                 case 16: {
                     UserAccount::checkSolBalance();
+                    break;
+                }
+                case 17: {
+                    UserAccount::viewAllCollections();
                     break;
                 }
             }

@@ -266,6 +266,7 @@ class UserAccount {
         	static void createNFTCollection(std::vector<Collection>& collections);
         	static void addNFTToCollection(std::vector<NFT>& nfts);
         	static void viewNFTsCollection();
+        	static void viewAllCollections();
 
 		
  		const V<Collection>& getCollections() const {

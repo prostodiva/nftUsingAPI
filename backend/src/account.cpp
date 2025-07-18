@@ -445,8 +445,7 @@ void UserAccount::createNFTCollection(std::vector<Collection>& collections) {
 	try {
 		std::string collectionName;
 		
-		std::cout<<"Enter collection name: "<<std::endl;
-		std::cin.ignore();
+		std::cout<<"Enter collection name: ";
 		std::getline(std::cin, collectionName);
 
 		Collection newCollection(collectionName, currentUser->name);
@@ -503,14 +502,19 @@ void UserAccount::addNFTToCollection(std::vector<NFT>& nfts) {
     }
 
 	try {
-		for (const auto& collection : currentUser->collections) {
-			std::cout<<collection.getName()<<std::endl;
+		std::cout << "DEBUG: Available collections for user '" << currentUser->name << "':" << std::endl;
+		if (currentUser->collections.empty()) {
+			std::cout << "  No collections found in currentUser->collections" << std::endl;
+		} else {
+			for (const auto& collection : currentUser->collections) {
+				std::cout << "  - '" << collection.getName() << "'" << std::endl;
+			}
 		}
 
 		std::string collectionName;
 		std::cout<<"\nEnter collection name to add NFT: ";
-		std::cin.ignore();
 		std::getline(std::cin, collectionName);
+		std::cout << "DEBUG: Looking for collection: '" << collectionName << "'" << std::endl;
 		
 		Collection* targetCollection = nullptr;
         	for (auto& collection : currentUser->collections) {
@@ -719,3 +723,5 @@ void UserAccount::requestTestSol() {
         std::cerr << "Error requesting SOL: " << e.what() << std::endl;
     }
 }
+
+
