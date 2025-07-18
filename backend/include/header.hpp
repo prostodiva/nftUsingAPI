@@ -180,6 +180,9 @@ class UserAccount {
         tx_file.close();
     }
 
+    void saveCollections(const std::string& dir);
+    void loadCollections(const std::string& dir);
+
     bool loadUserData(const std::string& email) {
         // Find the user's directory
         std::string cmd = "ls keypairs/";

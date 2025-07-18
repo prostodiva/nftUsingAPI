@@ -82,6 +82,13 @@ class V {
 			data[size_] = value;
 			size_++;
 		}
+
+		void clear() {
+			delete[] data;
+			data = nullptr;
+			size_ = 0;
+			capacity_ = 0;
+		}
 	
 };
 

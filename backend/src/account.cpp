@@ -251,8 +251,14 @@ void UserAccount::loadExistingUsers(std::vector<UserAccount>& users) {
                 
                 if (!name.empty() && !email.empty()) {
                     UserAccount user(walletAddress, name, email, "", balance);
+                    
+                    // Load collections for this user
+                    std::string user_dir = "keypairs/" + dir_name;
+                    user.loadCollections(user_dir);
+                    
                     users.push_back(user);
                     std::cout << "Loaded existing user: " << name << " (" << email << ")" << std::endl;
+                    std::cout << "  Collections loaded: " << user.getCollections().size() << std::endl;
                 } else {
                     std::cout << "Failed to parse user data from " << info_path << std::endl;
                     std::cout << "Parsed values - Name: '" << name << "', Email: '" << email << "'" << std::endl;
@@ -453,6 +459,13 @@ void UserAccount::createNFTCollection(std::vector<Collection>& collections) {
 		currentUser->collections.push_back(newCollection);
 		collections.push_back(newCollection);
 
+		// Save collections to disk
+		std::string safe_email = currentUser->email;
+		std::replace(safe_email.begin(), safe_email.end(), '@', '_');
+		std::replace(safe_email.begin(), safe_email.end(), '.', '_');
+		std::string keypair_dir = "keypairs/" + currentUser->name + "_" + safe_email;
+		currentUser->saveCollections(keypair_dir);
+
 		std::cout<<"NFT collection created successfully!"<< std::endl;
 		std::cout <<"Collection Name: "<< collectionName<< std::endl;
         	std::cout <<"Creator "<< currentUser->name<< std::endl;
@@ -554,6 +567,12 @@ void UserAccount::addNFTToCollection(std::vector<NFT>& nfts) {
            		 throw std::runtime_error("Failed to mint NFT on Solana");
         	}			
 		
+		// Save updated collections to disk
+		std::string safe_email = currentUser->email;
+		std::replace(safe_email.begin(), safe_email.end(), '@', '_');
+		std::replace(safe_email.begin(), safe_email.end(), '.', '_');
+		std::string keypair_dir = "keypairs/" + currentUser->name + "_" + safe_email;
+		currentUser->saveCollections(keypair_dir);
 
  		std::cout<<"\nNFT added successfully!" << std::endl;
         	std::cout<<"Token ID: " << newNFT.getTokenId() << std::endl;
@@ -723,5 +742,179 @@ void UserAccount::requestTestSol() {
         std::cerr << "Error requesting SOL: " << e.what() << std::endl;
     }
 }
+
+
+
+
+    void UserAccount::saveCollections(const std::string& dir) {
+        std::string collections_path = dir + "/collections.json";
+        std::ofstream collections_file(collections_path);
+        if (collections_file.is_open()) {
+            collections_file << "{\n";
+            collections_file << "  \"collections\": [\n";
+            
+            for (size_t i = 0; i < collections.size(); i++) {
+                const auto& collection = collections[i];
+                collections_file << "    {\n";
+                collections_file << "      \"name\": \"" << collection.getName() << "\",\n";
+                collections_file << "      \"creator\": \"" << collection.getCreator() << "\",\n";
+                collections_file << "      \"nfts\": [\n";
+                
+                const auto& nfts = collection.getNFTs();
+                for (size_t j = 0; j < nfts.size(); j++) {
+                    const auto& nft = nfts[j];
+                    collections_file << "        {\n";
+                    collections_file << "          \"name\": \"" << nft.getName() << "\",\n";
+                    collections_file << "          \"tokenId\": \"" << nft.getTokenId() << "\",\n";
+                    collections_file << "          \"owner\": \"" << nft.getOwner() << "\",\n";
+                    collections_file << "          \"price\": " << nft.getPrice() << ",\n";
+                    collections_file << "          \"isListed\": " << (nft.getIsListed() ? "true" : "false") << ",\n";
+                    collections_file << "          \"mintAddress\": \"" << nft.getMintAddress() << "\",\n";
+                    collections_file << "          \"metadataUri\": \"" << nft.getMetadataUri() << "\"\n";
+                    collections_file << "        }";
+                    if (j < nfts.size() - 1) collections_file << ",";
+                    collections_file << "\n";
+                }
+                
+                collections_file << "      ]\n";
+                collections_file << "    }";
+                if (i < collections.size() - 1) collections_file << ",";
+                collections_file << "\n";
+            }
+            
+            collections_file << "  ]\n";
+            collections_file << "}";
+            collections_file.close();
+        }
+    }
+
+    void UserAccount::loadCollections(const std::string& dir) {
+        std::string collections_path = dir + "/collections.json";
+        std::ifstream collections_file(collections_path);
+        if (!collections_file.is_open()) {
+            return; // No collections file exists yet
+        }
+
+        try {
+            std::string line;
+            std::string currentCollection;
+            std::string currentNFT;
+            bool inCollections = false;
+            bool inCollection = false;
+            bool inNFTs = false;
+            bool inNFT = false;
+            
+            std::string collectionName, collectionCreator;
+            std::string nftName, nftTokenId, nftOwner, nftMintAddress, nftMetadataUri;
+            double nftPrice = 0.0;
+            bool nftIsListed = false;
+            V<NFT> currentNFTs;
+
+            while (std::getline(collections_file, line)) {
+                // Remove whitespace
+                line.erase(0, line.find_first_not_of(" \t"));
+                if (line.empty()) continue;
+
+                if (line.find("\"collections\":") != std::string::npos) {
+                    inCollections = true;
+                } else if (line.find("\"name\":") != std::string::npos && inCollections) {
+                    size_t start = line.find("\"", line.find(":"));
+                    size_t end = line.find("\"", start + 1);
+                    if (start != std::string::npos && end != std::string::npos) {
+                        if (inCollection) {
+                            collectionName = line.substr(start + 1, end - start - 1);
+                        } else if (inNFT) {
+                            nftName = line.substr(start + 1, end - start - 1);
+                        }
+                    }
+                } else if (line.find("\"creator\":") != std::string::npos && inCollection) {
+                    size_t start = line.find("\"", line.find(":"));
+                    size_t end = line.find("\"", start + 1);
+                    if (start != std::string::npos && end != std::string::npos) {
+                        collectionCreator = line.substr(start + 1, end - start - 1);
+                    }
+                } else if (line.find("\"tokenId\":") != std::string::npos && inNFT) {
+                    size_t start = line.find("\"", line.find(":"));
+                    size_t end = line.find("\"", start + 1);
+                    if (start != std::string::npos && end != std::string::npos) {
+                        nftTokenId = line.substr(start + 1, end - start - 1);
+                    }
+                } else if (line.find("\"owner\":") != std::string::npos && inNFT) {
+                    size_t start = line.find("\"", line.find(":"));
+                    size_t end = line.find("\"", start + 1);
+                    if (start != std::string::npos && end != std::string::npos) {
+                        nftOwner = line.substr(start + 1, end - start - 1);
+                    }
+                } else if (line.find("\"price\":") != std::string::npos && inNFT) {
+                    size_t colonPos = line.find(":");
+                    if (colonPos != std::string::npos) {
+                        std::string priceStr = line.substr(colonPos + 1);
+                        // Remove trailing comma if present
+                        if (!priceStr.empty() && priceStr.back() == ',') {
+                            priceStr.pop_back();
+                        }
+                        nftPrice = std::stod(priceStr);
+                    }
+                } else if (line.find("\"isListed\":") != std::string::npos && inNFT) {
+                    if (line.find("true") != std::string::npos) {
+                        nftIsListed = true;
+                    }
+                } else if (line.find("\"mintAddress\":") != std::string::npos && inNFT) {
+                    size_t start = line.find("\"", line.find(":"));
+                    size_t end = line.find("\"", start + 1);
+                    if (start != std::string::npos && end != std::string::npos) {
+                        nftMintAddress = line.substr(start + 1, end - start - 1);
+                    }
+                } else if (line.find("\"metadataUri\":") != std::string::npos && inNFT) {
+                    size_t start = line.find("\"", line.find(":"));
+                    size_t end = line.find("\"", start + 1);
+                    if (start != std::string::npos && end != std::string::npos) {
+                        nftMetadataUri = line.substr(start + 1, end - start - 1);
+                    }
+                } else if (line.find("\"nfts\":") != std::string::npos && inCollection) {
+                    inNFTs = true;
+                } else if (line.find("{") != std::string::npos) {
+                    if (inCollections && !inCollection) {
+                        inCollection = true;
+                        collectionName = "";
+                        collectionCreator = "";
+                        currentNFTs.clear();
+                    } else if (inNFTs && !inNFT) {
+                        inNFT = true;
+                        nftName = "";
+                        nftTokenId = "";
+                        nftOwner = "";
+                        nftPrice = 0.0;
+                        nftIsListed = false;
+                        nftMintAddress = "";
+                        nftMetadataUri = "";
+                    }
+                } else if (line.find("}") != std::string::npos) {
+                    if (inNFT) {
+                        // Complete NFT
+                        NFT nft(nftName, nftOwner, nftPrice, nftIsListed, nftMetadataUri);
+                        // Set additional properties
+                        // Note: We can't set tokenId directly as it's generated in constructor
+                        nft.setIsListed(nftIsListed);
+                        currentNFTs.push_back(nft);
+                        inNFT = false;
+                    } else if (inCollection) {
+                        // Complete collection
+                        Collection collection(collectionName, collectionCreator);
+                        for (const auto& nft : currentNFTs) {
+                            collection.addNFT(nft);
+                        }
+                        collections.push_back(collection);
+                        inCollection = false;
+                        inNFTs = false;
+                    }
+                }
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error loading collections: " << e.what() << std::endl;
+        }
+        
+        collections_file.close();
+    }
 
 
