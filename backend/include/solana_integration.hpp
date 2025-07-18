@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <fstream>
 #include "solana_config.hpp"
 
 class SolanaIntegration {
@@ -44,16 +45,36 @@ public:
     }
     
     static std::string mintNFT(const std::string& metadata) {
+        // Create keypair for the NFT
         std::string cmd = "solana-keygen new --no-bip39-passphrase -o nft-keypair.json";
         if (system(cmd.c_str()) != 0) return "";
         
+        // Get mint address
         FILE* pipe = popen("solana address -k nft-keypair.json", "r");
         char buffer[128];
         std::string mintAddress;
         if (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
             mintAddress = buffer;
+            if (!mintAddress.empty() && mintAddress[mintAddress.length()-1] == '\n') {
+                mintAddress.erase(mintAddress.length()-1);
+            }
         }
         pclose(pipe);
+        
+        // Create metadata JSON file if metadata is provided
+        if (!metadata.empty()) {
+            std::string metadataFile = "nft-metadata.json";
+            std::ofstream file(metadataFile);
+            if (file.is_open()) {
+                file << metadata;
+                file.close();
+                
+                // TODO: Upload metadata to IPFS or similar service
+                // TODO: Use the metadata URI in the actual minting command
+                std::cout << "Metadata saved to " << metadataFile << std::endl;
+            }
+        }
+        
         return mintAddress;
     }
     
@@ -83,6 +104,15 @@ public:
     static void airdropDevnet(const std::string& address) {
         std::string cmd = "solana airdrop 1 " + address + " --url devnet";
         system(cmd.c_str());
+    }
+    
+    static std::string createMetadataJSON(const std::string& name, const std::string& description, const std::string& imageUrl) {
+        return "{\n"
+               "  \"name\": \"" + name + "\",\n"
+               "  \"description\": \"" + description + "\",\n"
+               "  \"image\": \"" + imageUrl + "\",\n"
+               "  \"attributes\": []\n"
+               "}";
     }
 };
 

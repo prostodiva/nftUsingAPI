@@ -178,13 +178,102 @@ void UserAccount::createAccount(std::vector<UserAccount>& users) {
     }
 }
 
-void UserAccount::login(std::vector<UserAccount>& users) {
-	std::string inputEmail, inputPassword;
+void UserAccount::loadExistingUsers(std::vector<UserAccount>& users) {
+    try {
+        std::cout << "Loading existing users from keypairs directory..." << std::endl;
+        
+        // Check if keypairs directory exists
+        std::string cmd = "ls keypairs/ 2>/dev/null";
+        FILE* pipe = popen(cmd.c_str(), "r");
+        if (!pipe) {
+            std::cout << "No keypairs directory found." << std::endl;
+            return;
+        }
+        
+        char buffer[128];
+        int userCount = 0;
+        while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+            std::string dir_name(buffer);
+            if (!dir_name.empty() && dir_name[dir_name.length()-1] == '\n') {
+                dir_name.erase(dir_name.length()-1);
+            }
+            
+            // Try to load user data from this directory
+            std::string info_path = "keypairs/" + dir_name + "/info.json";
+            std::ifstream info_file(info_path);
+            if (info_file.is_open()) {
+                std::string line;
+                std::string name, email, walletAddress, balance;
+                
+                while (std::getline(info_file, line)) {
+                    // Simple parsing - look for the values between quotes
+                    if (line.find("\"name\":") != std::string::npos) {
+                        size_t start = line.find("\"name\":") + 7;
+                        size_t quote1 = line.find("\"", start);
+                        size_t quote2 = line.find("\"", quote1 + 1);
+                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
+                            name = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        }
+                    } else if (line.find("\"email\":") != std::string::npos) {
+                        size_t start = line.find("\"email\":") + 8;
+                        size_t quote1 = line.find("\"", start);
+                        size_t quote2 = line.find("\"", quote1 + 1);
+                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
+                            email = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        }
+                    } else if (line.find("\"walletAddress\":") != std::string::npos) {
+                        size_t start = line.find("\"walletAddress\":") + 15;
+                        size_t quote1 = line.find("\"", start);
+                        size_t quote2 = line.find("\"", quote1 + 1);
+                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
+                            walletAddress = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        }
+                    } else if (line.find("\"balance\":") != std::string::npos) {
+                        size_t start = line.find("\"balance\":") + 10;
+                        size_t quote1 = line.find("\"", start);
+                        size_t quote2 = line.find("\"", quote1 + 1);
+                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
+                            balance = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        }
+                    }
+                }
+                
+                if (!name.empty() && !email.empty()) {
+                    UserAccount user(walletAddress, name, email, "", balance);
+                    users.push_back(user);
+                    userCount++;
+                    std::cout << "Loaded existing user: " << name << " (" << email << ")" << std::endl;
+                }
+                
+                info_file.close();
+            }
+        }
+        pclose(pipe);
+        
+        std::cout << "Loaded " << userCount << " existing users from disk." << std::endl;
+        
+        // If no users were loaded from disk, create default users
+        if (userCount == 0) {
+            std::cout << "No existing users found. Creating default users..." << std::endl;
+            UserAccount adminUser("", "admin", "admin@gmail.com", "123", "0");
+            users.push_back(adminUser);
+            std::cout << "Default admin user created: admin@gmail.com (password: 123)" << std::endl;
+            
+            UserAccount testUser("", "test", "test@test.com", "123", "0");
+            users.push_back(testUser);
+            std::cout << "Test user created: test@test.com (password: 123)" << std::endl;
+        }
+        
+        std::cout << "Total users available: " << users.size() << std::endl;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Error loading existing users: " << e.what() << std::endl;
+    }
+}
 
+void UserAccount::login(std::vector<UserAccount>& users) {
 	try {
-		if(currentUser) {
-			throw LoginException("A user is already logged in\n");
-		}
+		std::string inputEmail, inputPassword;
 		std::cout << "Enter email: ";
 		std::cin >> inputEmail;
 		std::cout << "Enter password: ";
@@ -194,7 +283,9 @@ void UserAccount::login(std::vector<UserAccount>& users) {
 			throw LoginException("The field cannot be empty");
 		}
 
+		std::cout << "Debug: Checking " << users.size() << " users in memory..." << std::endl;
 		for(auto& user : users) {
+			std::cout << "Debug: Checking user - Email: " << user.email << ", Name: " << user.name << std::endl;
 			if(user.email == inputEmail) {
 				// Set the currentUser pointer when login is successful
 				currentUser = &user;
@@ -332,7 +423,7 @@ void UserAccount::createNFTCollection(std::vector<Collection>& collections) {
 
 
 
-void UserAccount::addNFTToCollection(std::vector<NFT>& nfts, std::vector<Collection>& collections) {
+void UserAccount::addNFTToCollection(std::vector<NFT>& nfts) {
 	
 	if (!currentUser) {
 		std::cout <<"Login first\n"<<std::endl;

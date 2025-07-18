@@ -83,7 +83,7 @@ bool SolanaWallet::requestAirdrop() {
         while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
             result += buffer;
         }
-        int status = pclose(pipe);
+        pclose(pipe);
 
         if (result.find("Signature: ") != std::string::npos) {
             lastAirdropTime = currentTime;

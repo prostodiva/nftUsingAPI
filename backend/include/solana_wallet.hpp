@@ -10,9 +10,9 @@
 class SolanaWallet {
 private:
     std::string publicKey;
+    double balance;
     bool isConnected;
-    double balance = 0.0;
-    bool debug = true;
+
     const std::string TESTNET_URL = "https://api.testnet.solana.com";
     const double AIRDROP_AMOUNT = 0.05;
 
@@ -23,12 +23,7 @@ private:
     const int MAX_DAILY_AIRDROPS = 2;
 
 public:
-    SolanaWallet() : 
-    balance(0.0), 
-    isConnected(false), 
-    lastAirdropTime(0),
-    dailyAirdropCount(0), 
-    lastAirdropDate(0) {}
+    SolanaWallet() : balance(0.0), isConnected(false), lastAirdropTime(0), dailyAirdropCount(0), lastAirdropDate(0) {}
 
     bool connectPhantom();
     std::string getPublicKey() const;

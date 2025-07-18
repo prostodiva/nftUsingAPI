@@ -253,6 +253,7 @@ class UserAccount {
 
     		void createAccount(std::vector<UserAccount>& users);
     		static void login(std::vector<UserAccount>& users);
+    		static void loadExistingUsers(std::vector<UserAccount>& users);
     		static void logout();
 
 		
@@ -263,7 +264,7 @@ class UserAccount {
             		transactionHistory.push_back(transactionId);
         	}
         	static void createNFTCollection(std::vector<Collection>& collections);
-        	static void addNFTToCollection(std::vector<NFT>& nfts, std::vector<Collection>& collections);
+        	static void addNFTToCollection(std::vector<NFT>& nfts);
         	static void viewNFTsCollection();
 
 		
@@ -315,12 +316,13 @@ class NFT {
 	public:
 		NFT() : tokenId(""), name(""), owner(""), price(0.0), isListed(false) {}
 
-		NFT(std::string name, std::string owner, double price, bool isListed = false) 
+		NFT(std::string name, std::string owner, double price, bool isListed = false, std::string metadata = "") 
         		: tokenId(generateTokenId()), 
           	name(name), 
           	owner(owner), 
           	price(price), 
-          	isListed(isListed) {}
+          	isListed(isListed),
+          	metadataUri(metadata) {}
 
  		~NFT() = default;
 
@@ -365,6 +367,12 @@ class NFT {
 		}
     		void setIsListed(bool listed) { 
 			isListed = listed; 
+		}
+		void setMetadataUri(const std::string& uri) {
+			metadataUri = uri;
+		}
+		std::string getMetadataUri() const {
+			return metadataUri;
 		}	
 
 		void listForSale(double newPrice);

@@ -81,7 +81,7 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                     UserAccount::createNFTCollection(collections);
                     break;
                 case 8:
-                    UserAccount::addNFTToCollection(nfts, collections);
+                    			UserAccount::addNFTToCollection(nfts);
                     break;
                 case 9:
                     UserAccount::viewNFTsCollection();

@@ -9,6 +9,11 @@ int main() {
         std::vector<NFT> nfts;
         std::vector<Collection> collections;
 
+        // Load existing users from keypairs directory
+        std::cout << "Main: About to load existing users..." << std::endl;
+        UserAccount::loadExistingUsers(users);
+        std::cout << "Main: Finished loading users. Total users: " << users.size() << std::endl;
+
         std::cout << "Starting NFT Marketplace API server..." << std::endl;
 
         // Initialize the marketplace
