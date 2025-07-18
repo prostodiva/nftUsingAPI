@@ -1,0 +1,13 @@
+{
+  "listings": [
+    {
+      "tokenId": "NFT-A8BDF3",
+      "name": "secondNFT",
+      "owner": "2ueYJccWF91kYHU5moAEwmk21dQPULosHDJZt95L7dPY",
+      "price": 0.2,
+      "isListed": true,
+      "mintAddress": "",
+      "metadataUri": ""
+    }
+  ]
+}

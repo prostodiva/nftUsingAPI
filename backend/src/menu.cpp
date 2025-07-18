@@ -34,7 +34,8 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                   << "15 - Request test sol\n"
                   << "16 - check sol balance\n"
                   << "17 - view all my collections\n"
-                  << "\nEnter your choice (1-17): ";
+                  << "18 - view my owned NFTs\n"
+                  << "\nEnter your choice (1-18): ";
 
         // Ensure the prompt is displayed
         std::cout.flush();
@@ -45,8 +46,8 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             // Check if choice is valid
-            if (choice < 1 || choice > 17) {
-                std::cout << "Invalid choice. Please enter a number between 1 and 17." << std::endl;
+            if (choice < 1 || choice > 18) {
+                std::cout << "Invalid choice. Please enter a number between 1 and 18." << std::endl;
                 continue;
             }
 
@@ -173,19 +174,7 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                     break;
                 }
                 case 15: {
-                    if (!UserAccount::getCurrentUser()) {
-                        std::cout << "Login and connect Phantom wallet first\n" << std::endl;
-                        break;
-                    }
-
-                    if (UserAccount::getCurrentUser() == nullptr) {
-                        std::cout << "Please login first" << std::endl;
-                        break;
-                    }
-
-                    if (UserAccount::getCurrentUser()->getWallet().requestAirdrop()) {
-                        // Success message handled by requestAirdrop()
-                    }
+                    UserAccount::requestTestSol();
                     break;
                 }
                 case 16: {
@@ -196,12 +185,16 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                     UserAccount::viewAllCollections();
                     break;
                 }
+                case 18: {
+                    UserAccount::viewOwnedNFTs();
+                    break;
+                }
             }
         } else {
             // Clear error state and ignore invalid input
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Invalid input. Please enter a number between 1 and 16." << std::endl;
+            std::cout << "Invalid input. Please enter a number between 1 and 18." << std::endl;
         }
 
         // Add a newline for better readability

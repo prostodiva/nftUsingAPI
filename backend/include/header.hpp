@@ -180,8 +180,7 @@ class UserAccount {
         tx_file.close();
     }
 
-    void saveCollections(const std::string& dir);
-    void loadCollections(const std::string& dir);
+
 
     bool loadUserData(const std::string& email) {
         // Find the user's directory
@@ -270,6 +269,7 @@ class UserAccount {
         	static void addNFTToCollection(std::vector<NFT>& nfts);
         	static void viewNFTsCollection();
         	static void viewAllCollections();
+        	static void viewOwnedNFTs();
 
 		
  		const V<Collection>& getCollections() const {
@@ -291,6 +291,9 @@ class UserAccount {
     		static void setAllUsers(V<UserAccount*>& users) {
         		allUsers = users;
     		}
+    		static const V<UserAccount*>& getAllUsers() {
+        		return allUsers;
+    		}
 
     		static UserAccount* findUserByWallet(const std::string& walletAddress) {
         		if (allUsers.size() == 0) return nullptr;
@@ -304,6 +307,14 @@ class UserAccount {
     		}
 
 		 SolanaWallet& getWallet() { return wallet; }
+		 
+		 // Marketplace integration methods
+		 V<NFT>& getOwnedNFTs() { return ownedNFTs; }
+		 void setOwnedNFTs(const V<NFT>& nfts) { ownedNFTs = nfts; }
+		 std::string getName() const { return name; }
+		 std::string getEmail() const { return email; }
+		 void saveCollections(const std::string& dir);
+		 void loadCollections(const std::string& dir);
 };
 
 
@@ -444,6 +455,8 @@ public:
     double calculateFee(double price) const { return price * PLATFORM_FEE; }
     bool hasListedNFTs() const { return !listedNFTs.empty(); }
     bool listNFT(NFT& nft, double price);
+    void saveMarketplaceData();
+    void loadMarketplaceData();
 };
 
 void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<Collection>& collections);

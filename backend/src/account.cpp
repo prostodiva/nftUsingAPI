@@ -727,17 +727,35 @@ void UserAccount::requestTestSol() {
         std::cout << "Requesting test SOL airdrop..." << std::endl;
         std::cout << "Wallet address: " << currentUser->getWalletAddress() << std::endl;
         
-        if (currentUser->wallet.requestAirdrop()) {
-            currentUser->walletBalance = std::to_string(currentUser->wallet.getBalance());
-            std::cout << "SOL airdrop completed successfully!" << std::endl;
-            std::cout << "Updated balance: " << currentUser->walletBalance << " SOL" << std::endl;
-        } else {
-            std::cout << "SOL airdrop failed. This could be due to:" << std::endl;
-            std::cout << "1. Rate limiting (try again in a few minutes)" << std::endl;
-            std::cout << "2. Network congestion" << std::endl;
-            std::cout << "3. RPC endpoint issues" << std::endl;
-            std::cout << "Please try again later or check your wallet connection." << std::endl;
+        // Use SolanaIntegration::airdropDevnet directly instead of wallet.requestAirdrop
+        SolanaIntegration::airdropDevnet(currentUser->getWalletAddress());
+        
+        // Update the user's balance
+        std::string balance_cmd = "solana balance " + currentUser->getWalletAddress() + " --url https://api.devnet.solana.com";
+        FILE* balance_pipe = popen(balance_cmd.c_str(), "r");
+        if (balance_pipe) {
+            char buffer[128];
+            if (fgets(buffer, sizeof(buffer), balance_pipe) != nullptr) {
+                std::string balance_str(buffer);
+                // Remove " SOL" suffix and newline
+                size_t sol_pos = balance_str.find(" SOL");
+                if (sol_pos != std::string::npos) {
+                    balance_str = balance_str.substr(0, sol_pos);
+                }
+                if (!balance_str.empty() && balance_str.back() == '\n') {
+                    balance_str.pop_back();
+                }
+                try {
+                    double newBalance = std::stod(balance_str);
+                    currentUser->walletBalance = std::to_string(newBalance);
+                    std::cout << "Updated balance: " << currentUser->walletBalance << " SOL" << std::endl;
+                } catch (const std::exception& e) {
+                    std::cout << "Failed to parse balance: " << e.what() << std::endl;
+                }
+            }
+            pclose(balance_pipe);
         }
+        
     } catch(const std::exception& e) {
         std::cerr << "Error requesting SOL: " << e.what() << std::endl;
     }

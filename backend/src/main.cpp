@@ -18,6 +18,9 @@ int main() {
 
         // Initialize the marketplace
         Marketplace* marketplace = Marketplace::getInstance();
+        
+        // Load existing marketplace data
+        marketplace->loadMarketplaceData();
 
         // Start the API server
         std::cout << "Starting API server on port 3000..." << std::endl;
@@ -31,6 +34,8 @@ int main() {
 
         menu(users, nfts, collections);
 
+        // Save marketplace data before exiting
+        marketplace->saveMarketplaceData();
         delete marketplace;
         return 0;
     } catch (const std::exception& e) {

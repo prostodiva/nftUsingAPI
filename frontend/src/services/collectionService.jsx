@@ -9,7 +9,7 @@ export const collectionService = {
             console.log('Collections response:', response.data);
             
             if (response.data.status === 'success') {
-                return response.data;
+            return response.data;
             } else {
                 throw new Error(response.data.message || 'Failed to fetch collections');
             }
