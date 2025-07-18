@@ -70,7 +70,7 @@ bool SolanaWallet::requestAirdrop() {
         std::cout << "Requesting airdrop of " << AIRDROP_AMOUNT << " SOL to " << publicKey << std::endl;
 
         std::string cmd = "solana airdrop " + std::to_string(AIRDROP_AMOUNT) + 
-                         " " + publicKey + " --url " + TESTNET_URL + " 2>&1";
+                         " " + publicKey + " --url " + DEVNET_URL + " 2>&1";
         
         FILE* pipe = popen(cmd.c_str(), "r");
         if (!pipe) {
@@ -94,9 +94,16 @@ bool SolanaWallet::requestAirdrop() {
             std::cout << "Remaining airdrops today: " << (MAX_DAILY_AIRDROPS - dailyAirdropCount) << std::endl;
             return true;
         } else {
-            if (result.find("Rate limit") != std::string::npos) {
+            if (result.find("Rate limit") != std::string::npos || result.find("rate limit") != std::string::npos) {
                 std::cout << "Rate limit reached. Please wait at least " 
                          << MIN_AIRDROP_INTERVAL << " seconds before trying again." << std::endl;
+                std::cout << "Alternative: Try using a different RPC endpoint or wait a few minutes." << std::endl;
+            } else if (result.find("airdrop request failed") != std::string::npos) {
+                std::cout << "Airdrop request failed. This can happen when:" << std::endl;
+                std::cout << "1. Rate limit is reached (try again in a few minutes)" << std::endl;
+                std::cout << "2. Network is congested" << std::endl;
+                std::cout << "3. RPC endpoint is temporarily unavailable" << std::endl;
+                std::cout << "Please try again later or use a different RPC endpoint." << std::endl;
             } else {
                 std::cout << "Airdrop failed: " << result << std::endl;
             }

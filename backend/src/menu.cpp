@@ -30,7 +30,7 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                   << "11 - View marketplace listings\n"
                   << "12 - buy NFT\n"
                   << "13 - exit\n"
-                  << "14 - connect Phantom Wallet\n"
+                  << "14 - connect Phantom Wallet (disabled - not needed for CLI)\n"
                   << "15 - Request test sol\n"
                   << "16 - check sol balance\n"
                   << "\nEnter your choice (1-16): ";
@@ -166,16 +166,9 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                     break;
                 }
                 case 14: {
-                    if (!UserAccount::getCurrentUser()) {
-                        std::cout << "Login first\n" << std::endl;
-                        break;
-                    }
-
-                    if (UserAccount::getCurrentUser()) {
-                        if (UserAccount::getCurrentUser()->connectToSolana()) {  
-                            std::cout << "Wallet connected successfully!" << std::endl;
-                        }
-                    }
+                    std::cout << "Phantom wallet connection is not needed for CLI operations." << std::endl;
+                    std::cout << "All blockchain operations use local Solana CLI tools directly." << std::endl;
+                    std::cout << "This option is reserved for future web3 frontend integration." << std::endl;
                     break;
                 }
                 case 15: {
@@ -195,10 +188,7 @@ void menu(std::vector<UserAccount>& users, std::vector<NFT>& nfts, std::vector<C
                     break;
                 }
                 case 16: {
-                    if (UserAccount::getCurrentUser()) {
-                        double balance = SolanaIntegration::getBalance(UserAccount::getCurrentUser()->getWalletAddress());
-                        std::cout << "SOL Balance: " << balance << std::endl;
-                    }
+                    UserAccount::checkSolBalance();
                     break;
                 }
             }

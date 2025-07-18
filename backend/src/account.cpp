@@ -191,7 +191,6 @@ void UserAccount::loadExistingUsers(std::vector<UserAccount>& users) {
         }
         
         char buffer[128];
-        int userCount = 0;
         while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
             std::string dir_name(buffer);
             if (!dir_name.empty() && dir_name[dir_name.length()-1] == '\n') {
@@ -202,38 +201,50 @@ void UserAccount::loadExistingUsers(std::vector<UserAccount>& users) {
             std::string info_path = "keypairs/" + dir_name + "/info.json";
             std::ifstream info_file(info_path);
             if (info_file.is_open()) {
+                // Parse basic info (simplified - in real app you'd use JSON parser)
                 std::string line;
                 std::string name, email, walletAddress, balance;
                 
                 while (std::getline(info_file, line)) {
-                    // Simple parsing - look for the values between quotes
+                    // Clean the line
+                    line.erase(0, line.find_first_not_of(" \t"));
+                    if (line.empty()) continue;
+                    
                     if (line.find("\"name\":") != std::string::npos) {
-                        size_t start = line.find("\"name\":") + 7;
-                        size_t quote1 = line.find("\"", start);
-                        size_t quote2 = line.find("\"", quote1 + 1);
-                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
-                            name = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        size_t colonPos = line.find(":");
+                        if (colonPos != std::string::npos) {
+                            size_t start = line.find("\"", colonPos);
+                            size_t end = line.find("\"", start + 1);
+                            if (start != std::string::npos && end != std::string::npos) {
+                                name = line.substr(start + 1, end - start - 1);
+                            }
                         }
                     } else if (line.find("\"email\":") != std::string::npos) {
-                        size_t start = line.find("\"email\":") + 8;
-                        size_t quote1 = line.find("\"", start);
-                        size_t quote2 = line.find("\"", quote1 + 1);
-                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
-                            email = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        size_t colonPos = line.find(":");
+                        if (colonPos != std::string::npos) {
+                            size_t start = line.find("\"", colonPos);
+                            size_t end = line.find("\"", start + 1);
+                            if (start != std::string::npos && end != std::string::npos) {
+                                email = line.substr(start + 1, end - start - 1);
+                            }
                         }
                     } else if (line.find("\"walletAddress\":") != std::string::npos) {
-                        size_t start = line.find("\"walletAddress\":") + 15;
-                        size_t quote1 = line.find("\"", start);
-                        size_t quote2 = line.find("\"", quote1 + 1);
-                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
-                            walletAddress = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        size_t colonPos = line.find(":");
+                        if (colonPos != std::string::npos) {
+                            size_t start = line.find("\"", colonPos);
+                            size_t end = line.find("\"", start + 1);
+                            if (start != std::string::npos && end != std::string::npos) {
+                                walletAddress = line.substr(start + 1, end - start - 1);
+                            }
                         }
                     } else if (line.find("\"balance\":") != std::string::npos) {
-                        size_t start = line.find("\"balance\":") + 10;
-                        size_t quote1 = line.find("\"", start);
-                        size_t quote2 = line.find("\"", quote1 + 1);
-                        if (quote1 != std::string::npos && quote2 != std::string::npos) {
-                            balance = line.substr(quote1 + 1, quote2 - quote1 - 1);
+                        size_t colonPos = line.find(":");
+                        if (colonPos != std::string::npos) {
+                            size_t start = line.find("\"", colonPos);
+                            size_t end = line.find("\"", start + 1);
+                            if (start != std::string::npos && end != std::string::npos) {
+                                balance = line.substr(start + 1, end - start - 1);
+                            }
                         }
                     }
                 }
@@ -241,31 +252,16 @@ void UserAccount::loadExistingUsers(std::vector<UserAccount>& users) {
                 if (!name.empty() && !email.empty()) {
                     UserAccount user(walletAddress, name, email, "", balance);
                     users.push_back(user);
-                    userCount++;
                     std::cout << "Loaded existing user: " << name << " (" << email << ")" << std::endl;
+                } else {
+                    std::cout << "Failed to parse user data from " << info_path << std::endl;
+                    std::cout << "Parsed values - Name: '" << name << "', Email: '" << email << "'" << std::endl;
                 }
                 
                 info_file.close();
             }
         }
         pclose(pipe);
-        
-        std::cout << "Loaded " << userCount << " existing users from disk." << std::endl;
-        
-        // If no users were loaded from disk, create default users
-        if (userCount == 0) {
-            std::cout << "No existing users found. Creating default users..." << std::endl;
-            UserAccount adminUser("", "admin", "admin@gmail.com", "123", "0");
-            users.push_back(adminUser);
-            std::cout << "Default admin user created: admin@gmail.com (password: 123)" << std::endl;
-            
-            UserAccount testUser("", "test", "test@test.com", "123", "0");
-            users.push_back(testUser);
-            std::cout << "Test user created: test@test.com (password: 123)" << std::endl;
-        }
-        
-        std::cout << "Total users available: " << users.size() << std::endl;
-        
     } catch (const std::exception& e) {
         std::cerr << "Error loading existing users: " << e.what() << std::endl;
     }
@@ -283,9 +279,7 @@ void UserAccount::login(std::vector<UserAccount>& users) {
 			throw LoginException("The field cannot be empty");
 		}
 
-		std::cout << "Debug: Checking " << users.size() << " users in memory..." << std::endl;
 		for(auto& user : users) {
-			std::cout << "Debug: Checking user - Email: " << user.email << ", Name: " << user.name << std::endl;
 			if(user.email == inputEmail) {
 				// Set the currentUser pointer when login is successful
 				currentUser = &user;
@@ -343,7 +337,31 @@ void UserAccount::viewProfile() {
  	std::cout<<"Wallet Address: " <<currentUser->walletAddress<<std::endl;
 	std::cout<<"Name: " <<currentUser->name<<std::endl;
 	std::cout<<"Email: " <<currentUser->email<<std::endl;
-	std::cout<<"Wallet Balance: "<<currentUser->walletBalance<<std::endl;
+	
+	// Get current devnet balance
+	std::string balance_cmd = "solana balance " + currentUser->getWalletAddress() + " --url https://api.devnet.solana.com";
+	FILE* balance_pipe = popen(balance_cmd.c_str(), "r");
+	if (balance_pipe) {
+		char buffer[128];
+		if (fgets(buffer, sizeof(buffer), balance_pipe) != nullptr) {
+			std::string balance_str(buffer);
+			// Remove " SOL" suffix and newline
+			size_t sol_pos = balance_str.find(" SOL");
+			if (sol_pos != std::string::npos) {
+				balance_str = balance_str.substr(0, sol_pos);
+			}
+			if (!balance_str.empty() && balance_str.back() == '\n') {
+				balance_str.pop_back();
+			}
+			double currentBalance = std::stod(balance_str);
+			std::cout<<"Current Devnet Balance: "<<currentBalance<<" SOL"<<std::endl;
+			// Update stored balance
+			currentUser->walletBalance = std::to_string(currentBalance);
+		}
+		pclose(balance_pipe);
+	} else {
+		std::cout<<"Wallet Balance: "<<currentUser->walletBalance<<" SOL"<<std::endl;
+	}
 }
 
 
@@ -354,7 +372,31 @@ void UserAccount::checkWalletBalance() {
 		return;
 	}
 	std::cout<<"Address: "<<currentUser->walletAddress<<std::endl;
-	std::cout<<"Balance: "<<currentUser->walletBalance<<std::endl;
+	
+	// Get current devnet balance
+	std::string balance_cmd = "solana balance " + currentUser->getWalletAddress() + " --url https://api.devnet.solana.com";
+	FILE* balance_pipe = popen(balance_cmd.c_str(), "r");
+	if (balance_pipe) {
+		char buffer[128];
+		if (fgets(buffer, sizeof(buffer), balance_pipe) != nullptr) {
+			std::string balance_str(buffer);
+			// Remove " SOL" suffix and newline
+			size_t sol_pos = balance_str.find(" SOL");
+			if (sol_pos != std::string::npos) {
+				balance_str = balance_str.substr(0, sol_pos);
+			}
+			if (!balance_str.empty() && balance_str.back() == '\n') {
+				balance_str.pop_back();
+			}
+			double currentBalance = std::stod(balance_str);
+			std::cout<<"Current Devnet Balance: "<<currentBalance<<" SOL"<<std::endl;
+			// Update stored balance
+			currentUser->walletBalance = std::to_string(currentBalance);
+		}
+		pclose(balance_pipe);
+	} else {
+		std::cout<<"Balance: "<<currentUser->walletBalance<<" SOL"<<std::endl;
+	}
 
 	} catch(const std::exception& e) {
 		std::cerr<<"Error: "<<e.what()<<std::endl;
@@ -435,8 +477,19 @@ void UserAccount::addNFTToCollection(std::vector<NFT>& nfts) {
 		return;
 	}
 
-// Add Solana balance check
-    	if (SolanaIntegration::getBalance(currentUser->getWalletAddress()) < 0.05) {
+// Add Solana balance check (devnet)
+        std::string balance_cmd = "solana balance " + currentUser->getWalletAddress() + " --url https://api.devnet.solana.com";
+        FILE* balance_pipe = popen(balance_cmd.c_str(), "r");
+        double currentBalance = 0.0;
+        if (balance_pipe) {
+            char buffer[128];
+            if (fgets(buffer, sizeof(buffer), balance_pipe) != nullptr) {
+                currentBalance = std::stod(buffer);
+            }
+            pclose(balance_pipe);
+        }
+        
+        if (currentBalance < 0.05) {
         std::cout << "Insufficient SOL for minting. Need at least 0.05 SOL" << std::endl;
         std::cout << "Would you like to request test SOL? (y/n): ";
         char choice;
@@ -568,7 +621,7 @@ void UserAccount::connectPhantomWallet() {
         currentUser->keypairPath = keypair_dir + "/id.json";
 
         // Set Solana configuration with existing keypair
-        std::string config_cmd = "solana config set --url https://api.testnet.solana.com --keypair " + currentUser->keypairPath;
+        std::string config_cmd = "solana config set --url https://api.devnet.solana.com --keypair " + currentUser->keypairPath;
         if (system(config_cmd.c_str()) != 0) {
             throw std::runtime_error("Failed to set configuration");
         }
@@ -596,12 +649,44 @@ void UserAccount::checkSolBalance() {
     }
 
     try {
-        if (currentUser->wallet.updateBalance()) {
-            currentUser->walletBalance = std::to_string(currentUser->wallet.getBalance());
-            std::cout << "SOL Balance: " << currentUser->walletBalance << std::endl;
+        std::cout << "DEBUG: Current user info:" << std::endl;
+        std::cout << "  Name: " << currentUser->name << std::endl;
+        std::cout << "  Email: " << currentUser->email << std::endl;
+        std::cout << "  Wallet Address: " << currentUser->walletAddress << std::endl;
+        std::cout << "Checking SOL balance for wallet: " << currentUser->walletAddress << std::endl;
+        
+        // Check devnet balance (primary)
+        std::string devnet_cmd = "solana balance " + currentUser->walletAddress + " --url https://api.devnet.solana.com";
+        FILE* pipe = popen(devnet_cmd.c_str(), "r");
+        if (pipe) {
+            char buffer[128];
+                          if (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+                 std::cout << "Raw buffer: '" << buffer << "'" << std::endl; // DEBUG
+                 std::string balance_str(buffer);
+                 // Remove " SOL" suffix and newline
+                 size_t sol_pos = balance_str.find(" SOL");
+                 if (sol_pos != std::string::npos) {
+                     balance_str = balance_str.substr(0, sol_pos);
+                 }
+                 if (!balance_str.empty() && balance_str.back() == '\n') {
+                     balance_str.pop_back();
+                 }
+                 std::cout << "Parsed balance string: '" << balance_str << "'" << std::endl; // DEBUG
+                 
+                 try {
+                     double devnetBalance = std::stod(balance_str);
+                     std::cout << "Devnet Balance: " << devnetBalance << " SOL" << std::endl;
+                     currentUser->walletBalance = std::to_string(devnetBalance);
+                     std::cout << "Updated walletBalance to: " << currentUser->walletBalance << std::endl; // DEBUG
+                 } catch (const std::exception& e) {
+                     std::cout << "Failed to parse balance: " << e.what() << std::endl;
+                 }
+             }
+            pclose(pipe);
         } else {
-            std::cout << "Failed to fetch balance" << std::endl;
+            std::cout << "Failed to fetch devnet balance" << std::endl;
         }
+        
     } catch(const std::exception& e) {
         std::cerr << "Error checking balance: " << e.what() << std::endl;
     }
@@ -616,8 +701,19 @@ void UserAccount::requestTestSol() {
     }
 
     try {
+        std::cout << "Requesting test SOL airdrop..." << std::endl;
+        std::cout << "Wallet address: " << currentUser->getWalletAddress() << std::endl;
+        
         if (currentUser->wallet.requestAirdrop()) {
             currentUser->walletBalance = std::to_string(currentUser->wallet.getBalance());
+            std::cout << "SOL airdrop completed successfully!" << std::endl;
+            std::cout << "Updated balance: " << currentUser->walletBalance << " SOL" << std::endl;
+        } else {
+            std::cout << "SOL airdrop failed. This could be due to:" << std::endl;
+            std::cout << "1. Rate limiting (try again in a few minutes)" << std::endl;
+            std::cout << "2. Network congestion" << std::endl;
+            std::cout << "3. RPC endpoint issues" << std::endl;
+            std::cout << "Please try again later or check your wallet connection." << std::endl;
         }
     } catch(const std::exception& e) {
         std::cerr << "Error requesting SOL: " << e.what() << std::endl;

@@ -102,8 +102,45 @@ public:
     }
 
     static void airdropDevnet(const std::string& address) {
-        std::string cmd = "solana airdrop 1 " + address + " --url devnet";
-        system(cmd.c_str());
+        // Use devnet as primary (current configuration)
+        std::string cmd = "solana airdrop 1 " + address + " --url https://api.devnet.solana.com 2>&1";
+        FILE* pipe = popen(cmd.c_str(), "r");
+        if (pipe) {
+            char buffer[256];
+            std::string result = "";
+            while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+                result += buffer;
+            }
+            pclose(pipe);
+            
+            if (result.find("Signature: ") != std::string::npos) {
+                std::cout << "Airdrop successful on devnet!" << std::endl;
+                return;
+            } else if (result.find("rate limit") != std::string::npos || result.find("Rate limit") != std::string::npos) {
+                std::cout << "Devnet rate limit reached. Trying testnet..." << std::endl;
+                // Fallback to testnet
+                cmd = "solana airdrop 0.05 " + address + " --url https://api.testnet.solana.com 2>&1";
+                pipe = popen(cmd.c_str(), "r");
+                if (pipe) {
+                    result = "";
+                    while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+                        result += buffer;
+                    }
+                    pclose(pipe);
+                    
+                    if (result.find("Signature: ") != std::string::npos) {
+                        std::cout << "Airdrop successful on testnet!" << std::endl;
+                        return;
+                    } else {
+                        std::cout << "Testnet airdrop also failed: " << result << std::endl;
+                    }
+                }
+            } else {
+                std::cout << "Devnet airdrop failed: " << result << std::endl;
+            }
+        }
+        
+        std::cout << "All airdrop attempts failed. Please try again later." << std::endl;
     }
     
     static std::string createMetadataJSON(const std::string& name, const std::string& description, const std::string& imageUrl) {

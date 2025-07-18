@@ -1,0 +1,16 @@
+Complete Testing Workflow:
+
+Phase 1: Account Setup
+	1. Create account → 2. Login → 4.View profile
+Phase 2: Solana Integration
+	14. Connect Phantom Wallet → 15. Request test SOL → 16.Check balance
+Phase 3: Collection Management
+	Create NFT collection → Verify creation
+Phase 4: NFT Creation & Minting ⭐
+	Create and add NFT to collection → View NFTs in collection
+Phase 5: Marketplace Operations
+	List NFT for sale → View marketplace listings
+Phase 6: Transaction Testing
+	Buy NFT (with second account) → View transaction history
+Phase 7: Advanced Features
+	Check wallet balance → Logout/re-login to test persistence

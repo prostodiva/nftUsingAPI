@@ -13,8 +13,8 @@ private:
     double balance;
     bool isConnected;
 
-    const std::string TESTNET_URL = "https://api.testnet.solana.com";
-    const double AIRDROP_AMOUNT = 0.05;
+    const std::string DEVNET_URL = "https://api.devnet.solana.com";
+    const double AIRDROP_AMOUNT = 1.0;
 
     time_t lastAirdropTime;
     const int MIN_AIRDROP_INTERVAL = 20;  
