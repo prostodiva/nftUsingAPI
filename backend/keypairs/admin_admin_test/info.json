@@ -2,5 +2,6 @@
   "name": "admin",
   "email": "admin@test",
   "walletAddress": "2ueYJccWF91kYHU5moAEwmk21dQPULosHDJZt95L7dPY",
-  "balance": "0"
+  "balance": "2.4975",
+  "passwordHash": ""
 }

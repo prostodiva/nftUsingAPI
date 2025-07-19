@@ -56,6 +56,11 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 debug: CXXFLAGS += -g -O0 -DDEBUG
 debug: $(TARGET)
 
+# Debug build with ASAN and UBSAN
+debug-asan: CXXFLAGS += -g -O0 -DDEBUG -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer
+debug-asan: LDFLAGS += -fsanitize=address -fsanitize=undefined
+debug-asan: $(TARGET)
+
 # Release build
 release: CXXFLAGS += -O2 -DNDEBUG
 release: $(TARGET)

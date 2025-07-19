@@ -169,7 +169,8 @@ class UserAccount {
             info_file << "  \"name\": \"" << name << "\",\n";
             info_file << "  \"email\": \"" << email << "\",\n";
             info_file << "  \"walletAddress\": \"" << walletAddress << "\",\n";
-            info_file << "  \"balance\": \"" << walletBalance << "\"\n";
+            info_file << "  \"balance\": \"" << walletBalance << "\",\n";
+            info_file << "  \"passwordHash\": \"" << passwordHash << "\"\n";
             info_file << "}";
             info_file.close();
         }
@@ -332,19 +333,40 @@ class NFT {
 		NFT() : tokenId(""), name(""), owner(""), price(0.0), isListed(false) {}
 
 		NFT(std::string name, std::string owner, double price, bool isListed = false, std::string metadata = "") 
-        		: tokenId(generateTokenId()), 
-          	name(name), 
-          	owner(owner), 
-          	price(price), 
-          	isListed(isListed),
-          	metadataUri(metadata) {}
+        		: tokenId(generateTokenId()), name(name), owner(owner), price(price), isListed(isListed), metadataUri(metadata) {}
+
+		// Constructor with explicit tokenId (for loading from file)
+		NFT(std::string tokenId, std::string name, std::string owner, double price, bool isListed = false, std::string metadata = "") 
+        		: tokenId(tokenId), name(name), owner(owner), price(price), isListed(isListed), metadataUri(metadata) {}
+
+		// Copy constructor to preserve all data
+		NFT(const NFT& other) : tokenId(other.tokenId), name(other.name), owner(other.owner), 
+			price(other.price), isListed(other.isListed), mintAddress(other.mintAddress), metadataUri(other.metadataUri) {}
+
+		// Assignment operator
+		NFT& operator=(const NFT& other) {
+			if (this != &other) {
+				tokenId = other.tokenId;
+				name = other.name;
+				owner = other.owner;
+				price = other.price;
+				isListed = other.isListed;
+				mintAddress = other.mintAddress;
+				metadataUri = other.metadataUri;
+			}
+			return *this;
+		}
 
  		~NFT() = default;
 
 		bool mintOnSolana() {
 			 try {
-            			mintAddress = SolanaIntegration::mintNFT(metadataUri);
-            			return true;
+            			std::string newMintAddress = SolanaIntegration::mintNFT(metadataUri);
+            			if (!newMintAddress.empty()) {
+                			mintAddress = newMintAddress;
+                			return true;
+            			}
+            			return false;
         		} catch (...) {
             			return false;	
 			}
@@ -388,6 +410,9 @@ class NFT {
 		}
 		std::string getMetadataUri() const {
 			return metadataUri;
+		}
+		void setMintAddress(const std::string& address) {
+			mintAddress = address;
 		}	
 
 		void listForSale(double newPrice);

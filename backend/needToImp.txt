@@ -1,0 +1,5 @@
+You need to add platform fee storage by:
+Creating a platform wallet (admin account or dedicated platform account)
+Adding the fee to platform balance after deducting from buyer
+Saving platform balance to disk
+The fee is currently being collected but lost because there's no platform wallet to receive it!

@@ -13,6 +13,7 @@ Marketplace* Marketplace::getInstance() {
 
 bool Marketplace::listNFT(NFT& nft, double price) {
     try {
+        std::cout << "DEBUG: Listing NFT with tokenId: '" << nft.getTokenId() << "', name: '" << nft.getName() << "', owner: '" << nft.getOwner() << "', price: " << nft.getPrice() << std::endl;
         if (nft.getOwner() != UserAccount::getCurrentUser()->getWalletAddress()) {
             throw std::runtime_error("You can only list NFTs that you own");
         }   
@@ -98,6 +99,12 @@ void Marketplace::buyNFT(const std::string& tokenId, UserAccount& buyer) {
         double platformFee = calculateFee(price);
         double totalCost = price + platformFee;
         std::string seller = nftToBuy->getOwner();
+        
+        std::cout << "DEBUG: NFT details:" << std::endl;
+        std::cout << "  Token ID: " << tokenId << std::endl;
+        std::cout << "  Name: " << nftToBuy->getName() << std::endl;
+        std::cout << "  Current Owner: " << seller << std::endl;
+        std::cout << "  Price: " << price << " SOL" << std::endl;
 
         // Add Solana balance check (including platform fee) - use devnet
         std::string balance_cmd = "solana balance " + buyer.getWalletAddress() + " --url https://api.devnet.solana.com";
@@ -132,38 +139,11 @@ void Marketplace::buyNFT(const std::string& tokenId, UserAccount& buyer) {
         nftToBuy->setOwner(buyer.getWalletAddress());
         nftToBuy->setIsListed(false);
 
-        // Update balances
-        if (UserAccount* sellerAccount = UserAccount::findUserByWallet(seller)) {
-            sellerAccount->updateBalance(price); // Seller gets full price
-            
-            // Save seller's updated balance to disk
-            std::string seller_safe_email = sellerAccount->getEmail();
-            std::replace(seller_safe_email.begin(), seller_safe_email.end(), '@', '_');
-            std::replace(seller_safe_email.begin(), seller_safe_email.end(), '.', '_');
-            std::string seller_keypair_dir = "keypairs/" + sellerAccount->getName() + "_" + seller_safe_email;
-            
-            // Save balance to balance.txt file
-            std::string balance_path = seller_keypair_dir + "/balance.txt";
-            std::ofstream balance_file(balance_path);
-            if (balance_file.is_open()) {
-                balance_file << sellerAccount->getBalance();
-                balance_file.close();
-            }
-            
-            // Save updated user info to info.json
-            std::string info_path = seller_keypair_dir + "/info.json";
-            std::ofstream info_file(info_path);
-            if (info_file.is_open()) {
-                info_file << "{\n";
-                info_file << "  \"name\": \"" << sellerAccount->getName() << "\",\n";
-                info_file << "  \"email\": \"" << sellerAccount->getEmail() << "\",\n";
-                info_file << "  \"walletAddress\": \"" << sellerAccount->getWalletAddress() << "\",\n";
-                info_file << "  \"balance\": \"" << sellerAccount->getBalance() << "\"\n";
-                info_file << "}";
-                info_file.close();
-            }
-        }
+        // Update balances - will be handled after seller account lookup
+        double buyerOldBalance = buyer.getBalance();
+        std::cout << "DEBUG: Updating buyer balance from " << buyerOldBalance << " to " << (buyerOldBalance - totalCost) << " SOL" << std::endl;
         buyer.updateBalance(-totalCost); // Buyer pays price + platform fee
+        std::cout << "DEBUG: Buyer balance after update: " << buyer.getBalance() << " SOL" << std::endl;
         
         // Save buyer's updated balance to disk
         std::string buyer_safe_email = buyer.getEmail();
@@ -175,8 +155,13 @@ void Marketplace::buyNFT(const std::string& tokenId, UserAccount& buyer) {
         std::string buyer_balance_path = buyer_keypair_dir + "/balance.txt";
         std::ofstream buyer_balance_file(buyer_balance_path);
         if (buyer_balance_file.is_open()) {
-            buyer_balance_file << buyer.getBalance();
+            double buyerBalanceToSave = buyer.getBalance();
+            buyer_balance_file << buyerBalanceToSave;
             buyer_balance_file.close();
+            std::cout << "DEBUG: Saved buyer balance to disk: " << buyerBalanceToSave << " SOL" << std::endl;
+            std::cout << "DEBUG: Buyer balance file path: " << buyer_balance_path << std::endl;
+        } else {
+            std::cout << "DEBUG: ERROR - Could not open buyer balance file: " << buyer_balance_path << std::endl;
         }
         
         // Save updated user info to info.json
@@ -192,6 +177,10 @@ void Marketplace::buyNFT(const std::string& tokenId, UserAccount& buyer) {
             buyer_info_file.close();
         }
 
+        // Copy NFT data BEFORE modifying listings (to avoid use-after-free)
+        NFT boughtNFT = *nftToBuy;
+        boughtNFT.setIsListed(false);
+        
         // Record transaction
         Transaction tx(tokenId, seller, buyer.getWalletAddress(), price);
         recordTransaction(tx);
@@ -209,15 +198,60 @@ void Marketplace::buyNFT(const std::string& tokenId, UserAccount& buyer) {
         // Update user collections
         // Remove from seller's collections
         std::cout << "DEBUG: Looking for seller account with wallet: " << seller << std::endl;
+        std::cout << "DEBUG: Total users in allUsers vector: " << UserAccount::getAllUsers().size() << std::endl;
         std::cout << "DEBUG: Available users:" << std::endl;
         for (UserAccount* user : UserAccount::getAllUsers()) {
             if (user) {
                 std::cout << "  - " << user->getName() << " (" << user->getEmail() << "): " << user->getWalletAddress() << std::endl;
+                std::cout << "    Wallet match: " << (user->getWalletAddress() == seller ? "YES" : "NO") << std::endl;
+            } else {
+                std::cout << "  - NULL user pointer found!" << std::endl;
             }
         }
         
-        if (UserAccount* sellerAccount = UserAccount::findUserByWallet(seller)) {
+        UserAccount* sellerAccount = UserAccount::findUserByWallet(seller);
+        
+        // If seller account not found and owner is "MARKETPLACE", try to find the actual seller
+        if (!sellerAccount && seller == "MARKETPLACE") {
+            std::cout << "DEBUG: NFT owner is 'MARKETPLACE', searching for actual seller..." << std::endl;
+            // Search through all users to find who owns this NFT
+            for (UserAccount* user : UserAccount::getAllUsers()) {
+                if (user) {
+                    // Check in user's owned NFTs
+                    for (const auto& userNFT : user->getOwnedNFTs()) {
+                        if (userNFT.getTokenId() == tokenId) {
+                            sellerAccount = user;
+                            std::cout << "DEBUG: Found actual seller: " << user->getName() << " (" << user->getEmail() << ")" << std::endl;
+                            break;
+                        }
+                    }
+                    if (sellerAccount) break;
+                    
+                    // Check in user's collections
+                    for (const auto& collection : user->getCollections()) {
+                        for (const auto& collectionNFT : collection.getNFTs()) {
+                            if (collectionNFT.getTokenId() == tokenId) {
+                                sellerAccount = user;
+                                std::cout << "DEBUG: Found actual seller: " << user->getName() << " (" << user->getEmail() << ")" << std::endl;
+                                break;
+                            }
+                        }
+                        if (sellerAccount) break;
+                    }
+                    if (sellerAccount) break;
+                }
+            }
+        }
+        
+        if (sellerAccount) {
             std::cout << "DEBUG: Found seller account: " << sellerAccount->getName() << std::endl;
+            
+            // Update seller's balance
+            double oldBalance = sellerAccount->getBalance();
+            std::cout << "DEBUG: Updating seller balance from " << oldBalance << " to " << (oldBalance + price) << " SOL" << std::endl;
+            sellerAccount->updateBalance(price); // Seller gets full price
+            std::cout << "DEBUG: Seller balance after update: " << sellerAccount->getBalance() << " SOL" << std::endl;
+            
             // Remove from seller's owned NFTs
             std::cout << "DEBUG: Removing NFT " << tokenId << " from seller's owned NFTs (had " << sellerAccount->getOwnedNFTs().size() << " NFTs)" << std::endl;
             V<NFT> updatedOwnedNFTs;
@@ -247,24 +281,70 @@ void Marketplace::buyNFT(const std::string& tokenId, UserAccount& buyer) {
                 std::cout << "DEBUG: Collection " << collection.getName() << " now has " << collection.getNFTs().size() << " NFTs" << std::endl;
             }
             
-            // Save seller's updated data
+            // Save seller's updated data (collections and balance)
             std::string seller_safe_email = sellerAccount->getEmail();
             std::replace(seller_safe_email.begin(), seller_safe_email.end(), '@', '_');
             std::replace(seller_safe_email.begin(), seller_safe_email.end(), '.', '_');
             std::string seller_keypair_dir = "keypairs/" + sellerAccount->getName() + "_" + seller_safe_email;
+            
+            // Save collections
             sellerAccount->saveCollections(seller_keypair_dir);
+            
+            // Save balance to balance.txt file
+            std::string balance_path = seller_keypair_dir + "/balance.txt";
+            std::ofstream balance_file(balance_path);
+            if (balance_file.is_open()) {
+                double balanceToSave = sellerAccount->getBalance();
+                balance_file << balanceToSave;
+                balance_file.close();
+                std::cout << "DEBUG: Saved seller balance to disk: " << balanceToSave << " SOL" << std::endl;
+                std::cout << "DEBUG: Balance file path: " << balance_path << std::endl;
+            } else {
+                std::cout << "DEBUG: ERROR - Could not open seller balance file: " << balance_path << std::endl;
+            }
+            
+            // Save updated user info to info.json
+            std::string info_path = seller_keypair_dir + "/info.json";
+            std::ofstream info_file(info_path);
+            if (info_file.is_open()) {
+                info_file << "{\n";
+                info_file << "  \"name\": \"" << sellerAccount->getName() << "\",\n";
+                info_file << "  \"email\": \"" << sellerAccount->getEmail() << "\",\n";
+                info_file << "  \"walletAddress\": \"" << sellerAccount->getWalletAddress() << "\",\n";
+                info_file << "  \"balance\": \"" << sellerAccount->getBalance() << "\",\n";
+                info_file << "  \"passwordHash\": \"\"\n";
+                info_file << "}";
+                info_file.close();
+                std::cout << "DEBUG: Saved seller info to disk" << std::endl;
+            }
         } else {
             std::cout << "DEBUG: WARNING - Seller account not found for wallet: " << seller << std::endl;
             std::cout << "DEBUG: This means the NFT removal from seller's collections was skipped!" << std::endl;
         }
         
-        // Add to buyer's collections
-        NFT boughtNFT = *nftToBuy;
-        boughtNFT.setIsListed(false);
+        // Add to buyer's owned NFTs
         buyer.getOwnedNFTs().push_back(boughtNFT);
         
-        // Save buyer's updated collections (using existing buyer_keypair_dir)
+        // Add to buyer's collections (create a default collection if none exists)
+        if (buyer.getCollections().empty()) {
+            Collection defaultCollection("My NFTs", buyer.getName());
+            buyer.getCollections().push_back(defaultCollection);
+        }
+        
+        // Add NFT to the first collection
+        buyer.getCollections()[0].addNFT(boughtNFT);
+        
+        // Save buyer's updated collections and owned NFTs
         buyer.saveCollections(buyer_keypair_dir);
+        
+        // Save buyer's transaction history
+        std::string buyer_tx_path = buyer_keypair_dir + "/transactions.txt";
+        std::ofstream buyer_tx_file(buyer_tx_path, std::ios::app);
+        if (buyer_tx_file.is_open()) {
+            buyer_tx_file << tx.getTransactionId() << std::endl;
+            buyer_tx_file.close();
+            std::cout << "DEBUG: Saved transaction ID to buyer's file: " << tx.getTransactionId() << std::endl;
+        }
 
         // Save marketplace data
         saveMarketplaceData();
@@ -456,6 +536,7 @@ void Marketplace::loadMarketplaceData() {
     try {
         // Load listed NFTs
         std::string listings_path = "marketplace/listings.json";
+        std::cout << "DEBUG: Loading marketplace data from: " << listings_path << std::endl;
         std::ifstream listings_file(listings_path);
         if (listings_file.is_open()) {
             std::string line;
@@ -526,8 +607,11 @@ void Marketplace::loadMarketplaceData() {
                     mintAddress = "";
                     metadataUri = "";
                 } else if (line.find("}") != std::string::npos && inNFT) {
-                    // Complete NFT
-                    NFT nft(name, owner, price, isListed, metadataUri);
+                    // Complete NFT - use constructor with explicit tokenId
+                    NFT nft(tokenId, name, owner, price, isListed, metadataUri);
+                    // Set mint address separately since constructor doesn't handle it
+                    nft.setMintAddress(mintAddress);
+                    std::cout << "DEBUG: Loaded marketplace NFT: tokenId='" << tokenId << "', name='" << name << "', owner='" << owner << "', price=" << price << std::endl;
                     listedNFTs.push_back(nft);
                     inNFT = false;
                 }

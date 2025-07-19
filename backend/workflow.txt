@@ -1,7 +1,7 @@
 Complete Testing Workflow:
 
 Phase 1: Account Setup
-	1. Create account → 2. Login → 4.View profile -> 16.Check balance
+	1. Create account → 2. Login → 4.View profile -> 16.Check balance(this is also connects the wallet)
 Phase 2: Solana Integration
     15. Request test SOL → 16.Check balance
 Phase 3: Collection Management

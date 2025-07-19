@@ -1,33 +1,9 @@
 {
   "collections": [
     {
-      "name": "",
+      "name": "col1",
       "creator": "admin",
       "nfts": [
-        {
-          "name": "",
-          "tokenId": "NFT-047350",
-          "owner": "MARKETPLACE",
-          "price": 0.1,
-          "isListed": true,
-          "mintAddress": "",
-          "metadataUri": ""
-        }
-      ]
-    },
-    {
-      "name": "col2",
-      "creator": "admin",
-      "nfts": [
-        {
-          "name": "secondNFT",
-          "tokenId": "NFT-A8BDF3",
-          "owner": "2ueYJccWF91kYHU5moAEwmk21dQPULosHDJZt95L7dPY",
-          "price": 0.2,
-          "isListed": true,
-          "mintAddress": "",
-          "metadataUri": ""
-        }
       ]
     }
   ]
